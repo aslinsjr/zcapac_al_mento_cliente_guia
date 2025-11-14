@@ -1,381 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guia ABAP - Programa de Consulta de Clientes</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-color: #0070d2;
-            --secondary-color: #005fb2;
-            --accent-color: #ff9900;
-            --bg-color: #f4f6f9;
-            --sidebar-bg: #2c3e50;
-            --text-color: #333;
-            --border-color: #dfe3e8;
-            --code-bg: #f8f9fa;
-            --success-color: #28a745;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid rgba(255,255,255,0.2);
-        }
-
-        .sidebar-header h1 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-            color: var(--accent-color);
-        }
-
-        .sidebar-header p {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar-menu a {
-            display: block;
-            padding: 12px 15px;
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .sidebar-menu a:hover {
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-            padding-left: 20px;
-        }
-
-        .sidebar-menu a.active {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-        }
-
-        .sidebar-menu a::before {
-            content: "▸";
-            margin-right: 10px;
-            color: var(--accent-color);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            flex: 1;
-            padding: 40px;
-            max-width: 1200px;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 40px;
-            border-radius: 10px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
-
-        /* Accordion */
-        .accordion {
-            margin-bottom: 15px;
-        }
-
-        .accordion-item {
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .accordion-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        }
-
-        .accordion-header {
-            padding: 20px 25px;
-            background-color: white;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .accordion-header:hover {
-            background-color: #f8f9fa;
-        }
-
-        .accordion-header.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom-color: var(--border-color);
-        }
-
-        .accordion-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .accordion-icon {
-            font-size: 1.5rem;
-        }
-
-        .accordion-arrow {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .accordion-header.active .accordion-arrow {
-            transform: rotate(90deg);
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-            background-color: white;
-        }
-
-        .accordion-content.active {
-            max-height: 5000px;
-        }
-
-        .accordion-body {
-            padding: 25px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        /* Content Styling */
-        .accordion-body h3 {
-            color: var(--primary-color);
-            margin-top: 25px;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent-color);
-        }
-
-        .accordion-body h4 {
-            color: var(--secondary-color);
-            margin-top: 20px;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-        }
-
-        .accordion-body p {
-            margin-bottom: 15px;
-            line-height: 1.8;
-        }
-
-        .accordion-body ul {
-            margin-left: 25px;
-            margin-bottom: 15px;
-        }
-
-        .accordion-body li {
-            margin-bottom: 8px;
-            line-height: 1.7;
-        }
-
-        code {
-            background-color: var(--code-bg);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: #e83e8c;
-            border: 1px solid #e9ecef;
-        }
-
-        pre {
-            background-color: var(--code-bg);
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 20px 0;
-            border-left: 4px solid var(--primary-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        pre code {
-            background: none;
-            padding: 0;
-            border: none;
-            color: var(--text-color);
-        }
-
-        .info-box {
-            background-color: #e7f3ff;
-            border-left: 4px solid var(--primary-color);
-            padding: 15px 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .success-box {
-            background-color: #d4edda;
-            border-left: 4px solid var(--success-color);
-            padding: 15px 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .warning-box {
-            background-color: #fff3cd;
-            border-left: 4px solid var(--accent-color);
-            padding: 15px 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        th {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 5px 5px 5px 0;
-        }
-
-        .badge-blue {
-            background-color: #e7f3ff;
-            color: var(--primary-color);
-        }
-
-        .badge-orange {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-green {
-            background-color: #d4edda;
-            color: var(--success-color);
-        }
-
-        .flow-diagram {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        /* Responsive */
-        @media (max-width: 968px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Scroll behavior */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        .section {
-            scroll-margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
     <div class="container">
         <!-- Sidebar -->
@@ -421,14 +54,18 @@
                             <div class="accordion-body">
                                 <div class="info-box">
                                     <strong>Nome:</strong> ZCAPAC_JL_MENTO_CLIENTE<br>
-                                    <strong>Objetivo:</strong> Consultar e exibir informações de clientes com base em diferentes critérios de seleção.
+                                    <strong>Objetivo:</strong> Consultar e exibir informações de clientes com base em
+                                    diferentes critérios de seleção.
                                 </div>
-                                <p>Este programa ABAP permite consultar informações de clientes no SAP de duas formas:</p>
+                                <p>Este programa ABAP permite consultar informações de clientes no SAP de duas formas:
+                                </p>
                                 <ul>
-                                    <li><strong>Busca por número de cliente</strong> - Permite selecionar um ou mais clientes específicos</li>
+                                    <li><strong>Busca por número de cliente</strong> - Permite selecionar um ou mais
+                                        clientes específicos</li>
                                     <li><strong>Busca por localização</strong> - Filtra clientes por país e região</li>
                                 </ul>
-                                <p>Os dados exibidos incluem: número do cliente, nome, organização de vendas, empresa e cidade.</p>
+                                <p>Os dados exibidos incluem: número do cliente, nome, organização de vendas, empresa e
+                                    cidade.</p>
                             </div>
                         </div>
                     </div>
@@ -449,7 +86,7 @@
                         <div class="accordion-content">
                             <div class="accordion-body">
                                 <p>O programa segue o padrão modular ABAP, dividido em <strong>4 arquivos</strong>:</p>
-                                
+
                                 <pre><code>ZCAPAC_JL_MENTO_CLIENTE (Principal)
 ├── ZCAPAC_JL_MENTO_TOP    → Declarações e tipos
 ├── ZCAPAC_JL_MENTO_EVE    → Eventos da tela
@@ -465,10 +102,14 @@
 
                                 <h4>Função de cada arquivo:</h4>
                                 <ul>
-                                    <li><span class="badge badge-blue">TOP</span> Declara tabelas, tipos e estruturas de dados</li>
-                                    <li><span class="badge badge-orange">EVE</span> Controla eventos da tela de seleção</li>
-                                    <li><span class="badge badge-green">F01</span> Contém a lógica de negócio (Forms)</li>
-                                    <li><span class="badge badge-blue">Principal</span> Orquestra o programa e inclui os demais</li>
+                                    <li><span class="badge badge-blue">TOP</span> Declara tabelas, tipos e estruturas de
+                                        dados</li>
+                                    <li><span class="badge badge-orange">EVE</span> Controla eventos da tela de seleção
+                                    </li>
+                                    <li><span class="badge badge-green">F01</span> Contém a lógica de negócio (Forms)
+                                    </li>
+                                    <li><span class="badge badge-blue">Principal</span> Orquestra o programa e inclui os
+                                        demais</li>
                                 </ul>
                             </div>
                         </div>
@@ -511,10 +152,11 @@
   PARAMETERS: p_land1 TYPE kna1-land1 MODIF ID m2,
               p_regio TYPE kna1-regio MODIF ID m2.
 SELECTION-SCREEN END OF BLOCK bloco1.</code></pre>
-                                
+
                                 <h4>Componentes:</h4>
                                 <ul>
-                                    <li><code>s_kunnr</code> - Permite selecionar faixa de números de clientes (MODIF ID m1)</li>
+                                    <li><code>s_kunnr</code> - Permite selecionar faixa de números de clientes (MODIF ID
+                                        m1)</li>
                                     <li><code>p_land1</code> - Campo para País (MODIF ID m2)</li>
                                     <li><code>p_regio</code> - Campo para Região (MODIF ID m2)</li>
                                     <li><code>MODIF ID</code> - Identificador para controle de exibição dinâmica</li>
@@ -525,7 +167,7 @@ SELECTION-SCREEN END OF BLOCK bloco1.</code></pre>
   PARAMETERS: r_op1 RADIOBUTTON GROUP r1 USER-COMMAND com1 DEFAULT 'X',
               r_op2 RADIOBUTTON GROUP r1.
 SELECTION-SCREEN END OF BLOCK bloco2.</code></pre>
-                                
+
                                 <ul>
                                     <li><code>r_op1</code> - Opção 1: Busca por número de cliente (padrão)</li>
                                     <li><code>r_op2</code> - Opção 2: Busca por país/região</li>
@@ -544,7 +186,7 @@ START-OF-SELECTION.
 
 END-OF-SELECTION.
   INCLUDE zcapac_jl_mento_f01.</code></pre>
-                                
+
                                 <div class="warning-box">
                                     <strong>⚡ START-OF-SELECTION:</strong> Executado ao pressionar F8<br>
                                     <strong>📌 PERFORM:</strong> Chama a sub-rotina que busca os dados<br>
@@ -571,7 +213,7 @@ END-OF-SELECTION.
                             <div class="accordion-body">
                                 <h3>🔹 Tabelas Utilizadas</h3>
                                 <pre><code>TABLES: kna1, knvv, knb1, adrc, sscrfields.</code></pre>
-                                
+
                                 <ul>
                                     <li><code>kna1</code> - Dados mestres de clientes</li>
                                     <li><code>knvv</code> - Dados de vendas do cliente</li>
@@ -588,7 +230,7 @@ END-OF-SELECTION.
   empresa  TYPE knb1-bukrs,
   cidade   TYPE adrc-city1,
 END OF tp_saida,</code></pre>
-                                
+
                                 <div class="success-box">
                                     <strong>💡 Função:</strong> Define estrutura final dos dados exibidos<br>
                                     <strong>📊 Campos:</strong> Cliente, Nome, Organização de Vendas, Empresa, Cidade
@@ -602,7 +244,7 @@ END OF tp_saida,</code></pre>
   regio TYPE regio,      → Região
   adrnr TYPE adrnr,      → Número do endereço
 END OF tp_kna1,</code></pre>
-                                
+
                                 <div class="info-box">
                                     <strong>🎯 Função:</strong> Estrutura otimizada para seleção de dados<br>
                                     <strong>⚡ Por quê:</strong> Busca apenas campos necessários (performance)
@@ -644,7 +286,7 @@ END OF tp_kna1,</code></pre>
   wl_action-icon_id = icon_personal_settings.
   
   sscrfields-functxt_01 = wl_action.</code></pre>
-                                
+
                                 <div class="info-box">
                                     <strong>⏰ Quando:</strong> Antes da tela aparecer (1ª vez)<br>
                                     <strong>🎯 Função:</strong> Configura o botão F1 com ícone e texto<br>
@@ -654,7 +296,7 @@ END OF tp_kna1,</code></pre>
                                 <h3>🔹 AT SELECTION-SCREEN ON p_regio</h3>
                                 <pre><code>AT SELECTION-SCREEN ON p_regio.
   PERFORM zf_valida_regio.</code></pre>
-                                
+
                                 <ul>
                                     <li><strong>Quando:</strong> Ao sair do campo p_regio (região)</li>
                                     <li><strong>Função:</strong> Valida se a região existe</li>
@@ -667,7 +309,7 @@ END OF tp_kna1,</code></pre>
     WHEN 'FC01'.
       PERFORM zf_exibe_cliente.
   ENDCASE.</code></pre>
-                                
+
                                 <ul>
                                     <li><strong>Quando:</strong> Ao clicar em botões da tela</li>
                                     <li><code>sy-ucomm</code> - Código do comando executado</li>
@@ -690,7 +332,7 @@ END OF tp_kna1,</code></pre>
     ENDIF.
     MODIFY SCREEN.
   ENDLOOP.</code></pre>
-                                
+
                                 <div class="success-box">
                                     <strong>⏰ Quando:</strong> Antes de exibir a tela (sempre)<br>
                                     <strong>🎯 Função:</strong> Controla quais campos aparecem<br>
@@ -718,7 +360,7 @@ END OF tp_kna1,</code></pre>
                         <div class="accordion-content">
                             <div class="accordion-body">
                                 <h3>🔹 FORM zf_seleciona_dados</h3>
-                                
+
                                 <h4>Bloco 1: Declarações</h4>
                                 <pre><code>DATA: vl_bukrs       TYPE bukrs,
       tl_kna1        TYPE tp_t_kna1,
@@ -734,7 +376,7 @@ END OF tp_kna1,</code></pre>
   FROM tvarvc
   WHERE name = 'ZCAPAC_JL_BUKRS_S' AND
         type = 'S'.</code></pre>
-                                
+
                                 <div class="info-box">
                                     <strong>🎯 Função:</strong> Busca empresas permitidas (filtro)<br>
                                     <strong>📦 tvarvc:</strong> Tabela de variáveis/parâmetros do sistema<br>
@@ -754,7 +396,7 @@ ELSE.
     WHERE land1 = p_land1
     AND regio = p_regio.
 ENDIF.</code></pre>
-                                
+
                                 <ul>
                                     <li><strong>Opção 1:</strong> Busca por número de cliente</li>
                                     <li><strong>Opção 2:</strong> Busca por país e região</li>
@@ -767,10 +409,11 @@ ENDIF.</code></pre>
     INTO TABLE tl_knvv
     FOR ALL ENTRIES IN tl_kna1
     WHERE kunnr EQ tl_kna1-kunnr.</code></pre>
-                                
+
                                 <div class="success-box">
                                     <strong>✅ sy-subrc IS INITIAL:</strong> Se encontrou clientes<br>
-                                    <strong>⚡ FOR ALL ENTRIES:</strong> Busca dados relacionados aos clientes encontrados<br>
+                                    <strong>⚡ FOR ALL ENTRIES:</strong> Busca dados relacionados aos clientes
+                                    encontrados<br>
                                     <strong>📊 Busca:</strong><br>
                                     - Organização de vendas (knvv)<br>
                                     - Empresa (knb1)<br>
@@ -778,8 +421,9 @@ ENDIF.</code></pre>
                                 </div>
 
                                 <h3>🔹 FORM zf_trata_dados</h3>
-                                <p><strong>Função Principal:</strong> Processa os dados brutos e monta estrutura de saída</p>
-                                
+                                <p><strong>Função Principal:</strong> Processa os dados brutos e monta estrutura de
+                                    saída</p>
+
                                 <h4>Lógica do LOOP</h4>
                                 <pre><code>LOOP AT ft_kna1 INTO wl_kna1.
   wl_saida-cliente = wl_kna1-kunnr.
@@ -789,7 +433,7 @@ ENDIF.</code></pre>
   IF sy-subrc IS INITIAL.
     wl_saida-org_vend = wl_knvv-vkorg.
   ENDIF.</code></pre>
-                                
+
                                 <p><strong>Para cada cliente:</strong></p>
                                 <ol>
                                     <li>Copia número e nome</li>
@@ -808,7 +452,7 @@ ELSE.
   CLEAR wl_saida.
   CONTINUE.  → Pula este cliente
 ENDIF.</code></pre>
-                                
+
                                 <div class="warning-box">
                                     <strong>🎯 Função:</strong> Verifica se empresa está na lista autorizada<br>
                                     <strong>⏭️ CONTINUE:</strong> Ignora cliente se empresa não autorizada
@@ -822,7 +466,7 @@ ENDIF.</code></pre>
            'Empresa:', wl_saida-empresa, 
            'Cidade:', wl_saida-cidade.
 ENDLOOP.</code></pre>
-                                
+
                                 <ul>
                                     <li><code>WRITE</code> - Comando de saída</li>
                                     <li><code>/</code> - Nova linha</li>
@@ -836,13 +480,13 @@ ENDLOOP.</code></pre>
     text_button_2         = text-t06
   IMPORTING
     answer                = vl_resposta.</code></pre>
-                                
+
                                 <p>Exibe popup de confirmação: "Deseja imprimir?" com botões Sim/Não</p>
 
                                 <pre><code>IF vl_resposta EQ cl_resposta-sim.
   SET PARAMETER ID 'KUN' FIELD s_kunnr-low.
   CALL TRANSACTION 'XD03' AND SKIP FIRST SCREEN.</code></pre>
-                                
+
                                 <div class="info-box">
                                     <strong>Se SIM:</strong><br>
                                     - Define parâmetro KUN com número do cliente<br>
@@ -861,7 +505,7 @@ IF vl_check IS INITIAL.
   MESSAGE s004 DISPLAY LIKE 'E' WITH p_regio.
   RETURN.
 ENDIF.</code></pre>
-                                
+
                                 <ul>
                                     <li><strong>Função:</strong> Valida se região existe</li>
                                     <li><strong>Function Module:</strong> Função customizada de validação</li>
@@ -941,7 +585,8 @@ ENDIF.</code></pre>
                             <div class="accordion-body">
                                 <h3>✅ SELECT com FOR ALL ENTRIES</h3>
                                 <ul>
-                                    <li><strong>O quê:</strong> Busca dados relacionados sem fazer SELECT dentro de LOOP</li>
+                                    <li><strong>O quê:</strong> Busca dados relacionados sem fazer SELECT dentro de LOOP
+                                    </li>
                                     <li><strong>Vantagem:</strong> Performance (menos acessos ao banco)</li>
                                 </ul>
 
@@ -992,7 +637,8 @@ ENDIF.</code></pre>
                                 <div class="success-box">
                                     <ol>
                                         <li><strong>INCLUDES:</strong> Organizam código em arquivos separados</li>
-                                        <li><strong>TYPES:</strong> Defina estruturas otimizadas (só campos necessários)</li>
+                                        <li><strong>TYPES:</strong> Defina estruturas otimizadas (só campos necessários)
+                                        </li>
                                         <li><strong>FOR ALL ENTRIES:</strong> Use para evitar SELECTs em LOOP</li>
                                         <li><strong>SORT + BINARY SEARCH:</strong> Sempre que possível</li>
                                         <li><strong>sy-subrc:</strong> Sempre verifique após operações críticas</li>
@@ -1089,7 +735,8 @@ Cliente: 0000100002  Nome: Empresa XYZ  Org. Vendas: 1000  Empresa: BR01  Cidade
                                         <li>Interação com transações SAP</li>
                                         <li>Uso de function modules</li>
                                     </ul>
-                                    <p><strong>Ótimo exemplo para estudar conceitos fundamentais de ABAP! 🚀</strong></p>
+                                    <p><strong>Ótimo exemplo para estudar conceitos fundamentais de ABAP! 🚀</strong>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -1099,71 +746,6 @@ Cliente: 0000100002  Nome: Empresa XYZ  Org. Vendas: 1000  Empresa: BR01  Cidade
 
         </main>
     </div>
-
-    <script>
-        // Accordion functionality
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const content = header.nextElementSibling;
-                const isActive = header.classList.contains('active');
-
-                // Close all accordions
-                document.querySelectorAll('.accordion-header').forEach(h => {
-                    h.classList.remove('active');
-                    h.nextElementSibling.classList.remove('active');
-                });
-
-                // Open clicked accordion if it wasn't active
-                if (!isActive) {
-                    header.classList.add('active');
-                    content.classList.add('active');
-                }
-            });
-        });
-
-        // Smooth scroll for menu links
-        document.querySelectorAll('.menu-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Remove active class from all links
-                document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-                
-                // Add active class to clicked link
-                link.classList.add('active');
-                
-                // Get target section
-                const targetId = link.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                // Open accordion in target section
-                const accordionHeader = targetSection.querySelector('.accordion-header');
-                const accordionContent = targetSection.querySelector('.accordion-content');
-                
-                // Close all accordions first
-                document.querySelectorAll('.accordion-header').forEach(h => {
-                    h.classList.remove('active');
-                    h.nextElementSibling.classList.remove('active');
-                });
-                
-                // Open target accordion
-                accordionHeader.classList.add('active');
-                accordionContent.classList.add('active');
-                
-                // Scroll to section
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
-
-        // Set first accordion as active on load
-        window.addEventListener('load', () => {
-            const firstAccordion = document.querySelector('.accordion-header');
-            const firstContent = document.querySelector('.accordion-content');
-            if (firstAccordion && firstContent) {
-                firstAccordion.classList.add('active');
-                firstContent.classList.add('active');
-            }
-        });
-    </script>
 </body>
+
 </html>
