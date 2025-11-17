@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia ABAP - Programa de Consulta de Clientes</title>
+    <title>Guia ABAP - ZCAPAC_AL_MENTO_CLIENTE</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -25,18 +25,18 @@
                 <li><a href="#arquivo-eve" class="menu-link">Arquivo EVE (Eventos)</a></li>
                 <li><a href="#arquivo-f01" class="menu-link">Arquivo F01 (Forms)</a></li>
                 <li><a href="#fluxo-execucao" class="menu-link">Fluxo de Execução</a></li>
+                <li><a href="#funcionalidades" class="menu-link">Funcionalidades Especiais</a></li>
                 <li><a href="#conceitos" class="menu-link">Conceitos ABAP</a></li>
                 <li><a href="#dicas" class="menu-link">Dicas para Iniciantes</a></li>
                 <li><a href="#tabelas" class="menu-link">Tabelas SAP</a></li>
-                <li><a href="#resultado" class="menu-link">Resultado Final</a></li>
             </ul>
         </nav>
 
         <!-- Main Content -->
         <main class="main-content">
             <div class="hero">
-                <h1>📘 Guia Explicativo - Programa ABAP</h1>
-                <p>Consulta de Clientes - Um guia completo para iniciantes</p>
+                <h1>📘 ZCAPAC_AL_MENTO_CLIENTE</h1>
+                <p>Sistema de Consulta e Gestão de Clientes - Guia Completo</p>
             </div>
 
             <!-- Visão Geral -->
@@ -54,18 +54,50 @@
                             <div class="accordion-body">
                                 <div class="info-box">
                                     <strong>Nome:</strong> ZCAPAC_AL_MENTO_CLIENTE<br>
-                                    <strong>Objetivo:</strong> Consultar e exibir informações de clientes com base em
-                                    diferentes critérios de seleção.
+                                    <strong>Message-ID:</strong> ZCAPAC_JL_01<br>
+                                    <strong>Tipo:</strong> Report Executável<br>
+                                    <strong>Objetivo:</strong> Consultar, exibir e gerenciar informações de clientes com filtros avançados e múltiplas opções de visualização.
                                 </div>
-                                <p>Este programa ABAP permite consultar informações de clientes no SAP de duas formas:
-                                </p>
+
+                                <h3>🎯 Propósito do Programa</h3>
+                                <p>Este programa ABAP permite consultar informações de clientes do SAP com duas modalidades de busca e três formas de exibição, incluindo funcionalidades de edição e persistência de dados.</p>
+
+                                <h3>📊 Modalidades de Busca</h3>
                                 <ul>
-                                    <li><strong>Busca por número de cliente</strong> - Permite selecionar um ou mais
-                                        clientes específicos</li>
-                                    <li><strong>Busca por localização</strong> - Filtra clientes por país e região</li>
+                                    <li><span class="badge badge-blue">Opção 1</span> <strong>Busca por Cliente</strong> - Permite selecionar um ou múltiplos clientes específicos através de range (SELECT-OPTIONS)</li>
+                                    <li><span class="badge badge-orange">Opção 2</span> <strong>Busca por Localização</strong> - Filtra clientes por país (LAND1) e região (REGIO) com validação de região</li>
                                 </ul>
-                                <p>Os dados exibidos incluem: número do cliente, nome, organização de vendas, empresa e
-                                    cidade.</p>
+
+                                <h3>🖥️ Formas de Exibição</h3>
+                                <ul>
+                                    <li><strong>Lista Simples</strong> - Formato WRITE tradicional</li>
+                                    <li><strong>ALV Manual</strong> - Grid ALV com fieldcatalog manual</li>
+                                    <li><strong>ALV Function</strong> - Grid ALV com fieldcatalog automático + edição de cidade + salvamento em banco</li>
+                                </ul>
+
+                                <h3>📦 Dados Exibidos</h3>
+                                <table>
+                                    <tr>
+                                        <td><strong>Cliente (KUNNR)</strong></td>
+                                        <td>Número identificador do cliente</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nome (NAME1)</strong></td>
+                                        <td>Razão social do cliente</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Org. Vendas (VKORG)</strong></td>
+                                        <td>Organização de vendas associada</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Empresa (BUKRS)</strong></td>
+                                        <td>Código da empresa (filtrado por TVARVC)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Cidade (CITY1)</strong></td>
+                                        <td>Cidade do endereço do cliente</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -85,32 +117,50 @@
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <p>O programa segue o padrão modular ABAP, dividido em <strong>4 arquivos</strong>:</p>
+                                <p>O programa segue o padrão modular ABAP, dividido em <strong>4 arquivos INCLUDE</strong>:</p>
 
-                                <pre><code>ZCAPAC_AL_MENTO_CLIENTE (Principal)
-├── ZCAPAC_AL_MENTO_TOP    → Declarações e tipos
-├── ZCAPAC_AL_MENTO_EVE    → Eventos da tela
-└── ZCAPAC_AL_MENTO_F01    → Sub-rotinas (Forms)</code></pre>
+                                <pre><code>ZCAPAC_AL_MENTO_CLIENTE (Principal - 42 linhas)
+├── ZCAPAC_JL_MENTO_TOP    → Declarações, TYPES e DATA (77 linhas)
+├── ZCAPAC_JL_MENTO_EVE    → Eventos da tela de seleção (54 linhas)
+└── ZCAPAC_JL_MENTO_F01    → Sub-rotinas/FORMs (320+ linhas)</code></pre>
 
                                 <div class="success-box">
-                                    <strong>🎯 Por que modularizar?</strong><br>
-                                    - Melhor organização do código<br>
-                                    - Facilita manutenção<br>
-                                    - Permite reutilização<br>
-                                    - Segue boas práticas ABAP
+                                    <strong>🎯 Vantagens da Modularização:</strong><br>
+                                    ✓ Separação clara de responsabilidades<br>
+                                    ✓ Facilita manutenção e debug<br>
+                                    ✓ Permite trabalho em equipe<br>
+                                    ✓ Reutilização de código<br>
+                                    ✓ Segue boas práticas SAP
                                 </div>
 
-                                <h4>Função de cada arquivo:</h4>
-                                <ul>
-                                    <li><span class="badge badge-blue">TOP</span> Declara tabelas, tipos e estruturas de
-                                        dados</li>
-                                    <li><span class="badge badge-orange">EVE</span> Controla eventos da tela de seleção
-                                    </li>
-                                    <li><span class="badge badge-green">F01</span> Contém a lógica de negócio (Forms)
-                                    </li>
-                                    <li><span class="badge badge-blue">Principal</span> Orquestra o programa e inclui os
-                                        demais</li>
-                                </ul>
+                                <h4>📁 Função de cada arquivo:</h4>
+                                <table>
+                                    <tr>
+                                        <th>Arquivo</th>
+                                        <th>Responsabilidade</th>
+                                        <th>Conteúdo</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-blue">CLIENTE</span></td>
+                                        <td>Orquestração</td>
+                                        <td>REPORT, tela de seleção, START-OF-SELECTION</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-blue">TOP</span></td>
+                                        <td>Declarações</td>
+                                        <td>TABLES, TYPES, DATA globais</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-orange">EVE</span></td>
+                                        <td>Eventos</td>
+                                        <td>INITIALIZATION, AT SELECTION-SCREEN, OUTPUT</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-green">F01</span></td>
+                                        <td>Lógica</td>
+                                        <td>FORMs com toda lógica de negócio</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -130,68 +180,69 @@
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <h3>🔹 Cabeçalho</h3>
-                                <pre><code>REPORT zcapac_al_mento_cliente MESSAGE-ID ZCAPAC_AL_01.</code></pre>
+                                <h3>🔹 1. Cabeçalho do Report</h3>
+                                <pre><code>REPORT zcapac_jl_mento_cliente MESSAGE-ID ZCAPAC_JL_01.</code></pre>
                                 <ul>
-                                    <li><code>REPORT</code> - Define o início de um programa executável</li>
-                                    <li><code>MESSAGE-ID</code> - Define a classe de mensagens usada no programa</li>
+                                    <li><code>REPORT</code> - Define um programa executável (tipo R)</li>
+                                    <li><code>MESSAGE-ID</code> - Define classe de mensagens ZCAPAC_JL_01 para usar MESSAGE s000, e001, etc.</li>
                                 </ul>
 
-                                <h3>🔹 Include TOP</h3>
-                                <pre><code>INCLUDE zcapac_al_mento_top.</code></pre>
-                                <div class="info-box">
-                                    <strong>Onde:</strong> Logo no início do programa<br>
-                                    <strong>Função:</strong> Inclui as declarações de tabelas e tipos<br>
-                                    <strong>Por quê:</strong> Organização - separa declarações da lógica
-                                </div>
+                                <h3>🔹 2. Include TOP (Declarações)</h3>
+                                <pre><code>INCLUDE zcapac_jl_mento_top.</code></pre>
+                                <p>Inclui todas as declarações: TABLES, TYPES e variáveis globais.</p>
 
-                                <h3>🔹 Tela de Seleção - BLOCO 1</h3>
+                                <h3>🔹 3. Tela de Seleção - BLOCO 1</h3>
                                 <pre><code>SELECTION-SCREEN BEGIN OF BLOCK bloco1 WITH FRAME TITLE text-t01.
   SELECT-OPTIONS: s_kunnr FOR kna1-kunnr MODIF ID m1.
-  
+
   PARAMETERS: p_land1 TYPE kna1-land1 MODIF ID m2,
               p_regio TYPE kna1-regio MODIF ID m2.
 SELECTION-SCREEN END OF BLOCK bloco1.</code></pre>
 
-                                <h4>Componentes:</h4>
-                                <ul>
-                                    <li><code>s_kunnr</code> - Permite selecionar faixa de números de clientes (MODIF ID
-                                        m1)</li>
-                                    <li><code>p_land1</code> - Campo para País (MODIF ID m2)</li>
-                                    <li><code>p_regio</code> - Campo para Região (MODIF ID m2)</li>
-                                    <li><code>MODIF ID</code> - Identificador para controle de exibição dinâmica</li>
-                                </ul>
+                                <div class="info-box">
+                                    <strong>SELECT-OPTIONS s_kunnr:</strong> Range de clientes (permite múltiplos valores, intervalos, exclusões)<br>
+                                    <strong>PARAMETERS p_land1/p_regio:</strong> Campos simples para país e região<br>
+                                    <strong>MODIF ID m1/m2:</strong> Grupos de modificação para controle dinâmico de tela
+                                </div>
 
-                                <h3>🔹 Tela de Seleção - BLOCO 2</h3>
+                                <h3>🔹 4. Tela de Seleção - BLOCO 2</h3>
                                 <pre><code>SELECTION-SCREEN BEGIN OF BLOCK bloco2 WITH FRAME TITLE text-t02.
   PARAMETERS: r_op1 RADIOBUTTON GROUP r1 USER-COMMAND com1 DEFAULT 'X',
               r_op2 RADIOBUTTON GROUP r1.
+
+  SELECTION-SCREEN SKIP 1.
+  
+  PARAMETERS: p_alv    TYPE c AS CHECKBOX DEFAULT 'X',
+              p_manual TYPE c AS CHECKBOX DEFAULT ''.
 SELECTION-SCREEN END OF BLOCK bloco2.</code></pre>
 
                                 <ul>
-                                    <li><code>r_op1</code> - Opção 1: Busca por número de cliente (padrão)</li>
-                                    <li><code>r_op2</code> - Opção 2: Busca por país/região</li>
-                                    <li><code>USER-COMMAND com1</code> - Dispara evento ao clicar (atualiza tela)</li>
+                                    <li><code>r_op1/r_op2</code> - Radiobuttons para escolher modo de busca</li>
+                                    <li><code>USER-COMMAND com1</code> - Dispara evento AT SELECTION-SCREEN OUTPUT para controlar visibilidade</li>
+                                    <li><code>p_alv</code> - Checkbox para usar ALV (marcado por padrão)</li>
+                                    <li><code>p_manual</code> - Checkbox para usar fieldcatalog manual</li>
                                 </ul>
 
-                                <h3>🔹 Botão de Função</h3>
-                                <pre><code>SELECTION-SCREEN FUNCTION KEY 1.</code></pre>
-                                <p>Cria um botão personalizado na tela (F1), configurado no evento INITIALIZATION.</p>
+                                <h3>🔹 5. Botões de Função</h3>
+                                <pre><code>SELECTION-SCREEN FUNCTION KEY 1.
+SELECTION-SCREEN FUNCTION KEY 2.</code></pre>
+                                <p>Cria 2 botões customizados na barra de ferramentas (FC01 e FC02).</p>
 
-                                <h3>🔹 Eventos do Programa</h3>
-                                <pre><code>INCLUDE zcapac_al_mento_eve.
+                                <h3>🔹 6. Include Eventos</h3>
+                                <pre><code>INCLUDE zcapac_jl_mento_eve.</code></pre>
+                                <p>Inclui todos os eventos: INITIALIZATION, AT SELECTION-SCREEN, etc.</p>
 
-START-OF-SELECTION.
+                                <h3>🔹 7. Processamento Principal</h3>
+                                <pre><code>START-OF-SELECTION.
   PERFORM zf_seleciona_dados.
 
 END-OF-SELECTION.
-  INCLUDE zcapac_al_mento_f01.</code></pre>
-
-                                <div class="warning-box">
-                                    <strong>⚡ START-OF-SELECTION:</strong> Executado ao pressionar F8<br>
-                                    <strong>📌 PERFORM:</strong> Chama a sub-rotina que busca os dados<br>
-                                    <strong>📦 END-OF-SELECTION:</strong> Inclui as sub-rotinas (Forms)
-                                </div>
+  INCLUDE zcapac_jl_mento_f01.</code></pre>
+                                <ul>
+                                    <li><code>START-OF-SELECTION</code> - Evento disparado após validação da tela</li>
+                                    <li><code>PERFORM zf_seleciona_dados</code> - Chama FORM principal que inicia processamento</li>
+                                    <li>Include F01 no final (poderia ser no início também)</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -211,52 +262,78 @@ END-OF-SELECTION.
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <h3>🔹 Tabelas Utilizadas</h3>
+                                <h3>🔹 1. Declaração de Tabelas</h3>
                                 <pre><code>TABLES: kna1, knvv, knb1, adrc, sscrfields.</code></pre>
+                                <p>Declara tabelas para uso em SELECT-OPTIONS e controle de tela (sscrfields).</p>
 
-                                <ul>
-                                    <li><code>kna1</code> - Dados mestres de clientes</li>
-                                    <li><code>knvv</code> - Dados de vendas do cliente</li>
-                                    <li><code>knb1</code> - Dados contábeis do cliente</li>
-                                    <li><code>adrc</code> - Endereços</li>
-                                    <li><code>sscrfields</code> - Campos de controle da tela de seleção</li>
-                                </ul>
+                                <h3>🔹 2. Estruturas Customizadas (TYPES)</h3>
 
-                                <h3>🔹 Estrutura de Saída</h3>
+                                <h4>tp_saida - Estrutura de Saída</h4>
                                 <pre><code>BEGIN OF tp_saida,
-  cliente  TYPE kna1-kunnr,
-  nome     TYPE kna1-name1,
-  org_vend TYPE knvv-vkorg,
-  empresa  TYPE knb1-bukrs,
-  cidade   TYPE adrc-city1,
-END OF tp_saida,</code></pre>
+  kunnr   TYPE kunnr,      "Cliente
+  name1   TYPE name1_gp,   "Nome
+  vkorg   TYPE vkorg,      "Org. Vendas
+  empresa TYPE bukrs,      "Empresa
+  cidade  TYPE ad_city1,   "Cidade
+END OF tp_saida,
+tp_t_saida TYPE STANDARD TABLE OF tp_saida</code></pre>
+                                <p>Estrutura otimizada contendo apenas campos necessários para exibição.</p>
+
+                                <h4>tp_kna1 - Cliente</h4>
+                                <pre><code>BEGIN OF tp_kna1,
+  kunnr TYPE kunnr,
+  name1 TYPE name1_gp,
+  land1 TYPE land1_gp,
+  regio TYPE regio,
+  adrnr TYPE adrnr,
+END OF tp_kna1,
+tp_t_kna1 TYPE TABLE OF tp_kna1</code></pre>
+
+                                <h4>tp_knvv - Dados de Vendas</h4>
+                                <pre><code>BEGIN OF tp_knvv,
+  kunnr TYPE kunnr,
+  vkorg TYPE vkorg,
+END OF tp_knvv,
+tp_t_knvv TYPE TABLE OF tp_knvv</code></pre>
+
+                                <h4>tp_knb1 - Dados Contábeis</h4>
+                                <pre><code>BEGIN OF tp_knb1,
+  kunnr TYPE kunnr,
+  bukrs TYPE bukrs,
+END OF tp_knb1,
+tp_t_knb1 TYPE TABLE OF tp_knb1</code></pre>
+
+                                <h4>tp_adrc - Endereços</h4>
+                                <pre><code>BEGIN OF tp_adrc,
+  addrnumber TYPE ad_addrnum,
+  city1      TYPE ad_city1,
+END OF tp_adrc,
+tp_t_adrc TYPE TABLE OF tp_adrc</code></pre>
+
+                                <h4>tp_tvarvc_full - Parâmetros Sistema</h4>
+                                <pre><code>BEGIN OF tp_tvarvc_full,
+  sign TYPE tvarv_sign,
+  opti TYPE tvarv_opti,
+  low  TYPE rvari_val_255,
+  high TYPE rvari_val_255,
+END OF tp_tvarvc_full,
+tp_t_tvarvc_full TYPE TABLE OF tp_tvarvc_full</code></pre>
+
+                                <h3>🔹 3. Variáveis Globais</h3>
+                                <pre><code>DATA: tg_alv   TYPE tp_t_saida,
+      tg_alv_2 TYPE TABLE OF zst_capac_jl_01.</code></pre>
+                                <ul>
+                                    <li><code>tg_alv</code> - Tabela interna para ALV manual</li>
+                                    <li><code>tg_alv_2</code> - Tabela interna baseada em estrutura DDIC (para ALV function)</li>
+                                </ul>
 
                                 <div class="success-box">
-                                    <strong>💡 Função:</strong> Define estrutura final dos dados exibidos<br>
-                                    <strong>📊 Campos:</strong> Cliente, Nome, Organização de Vendas, Empresa, Cidade
+                                    <strong>💡 Por que criar TYPES customizados?</strong><br>
+                                    ✓ Evita SELECT * (melhora performance)<br>
+                                    ✓ Apenas campos necessários<br>
+                                    ✓ Facilita manutenção<br>
+                                    ✓ Permite nomear campos de forma clara
                                 </div>
-
-                                <h3>🔹 Estrutura KNA1 (Cliente)</h3>
-                                <pre><code>BEGIN OF tp_kna1,
-  kunnr TYPE kunnr,      → Número do cliente
-  name1 TYPE name1_gp,   → Nome
-  land1 TYPE land1_gp,   → País
-  regio TYPE regio,      → Região
-  adrnr TYPE adrnr,      → Número do endereço
-END OF tp_kna1,</code></pre>
-
-                                <div class="info-box">
-                                    <strong>🎯 Função:</strong> Estrutura otimizada para seleção de dados<br>
-                                    <strong>⚡ Por quê:</strong> Busca apenas campos necessários (performance)
-                                </div>
-
-                                <h3>🔹 Outras Estruturas</h3>
-                                <ul>
-                                    <li><code>tp_knvv</code> → Organização de vendas</li>
-                                    <li><code>tp_knb1</code> → Empresa do cliente</li>
-                                    <li><code>tp_adrc</code> → Endereço/Cidade</li>
-                                    <li><code>tp_tvarvc_full</code> → Parâmetros de configuração</li>
-                                </ul>
                             </div>
                         </div>
                     </div>
@@ -270,75 +347,83 @@ END OF tp_kna1,</code></pre>
                         <div class="accordion-header">
                             <div class="accordion-title">
                                 <span class="accordion-icon">⚡</span>
-                                <span>Arquivo EVE (Eventos da Tela)</span>
+                                <span>Arquivo EVE (Eventos)</span>
                             </div>
                             <span class="accordion-arrow">▶</span>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <h3>🔹 INITIALIZATION</h3>
+                                <h3>🔹 1. INITIALIZATION</h3>
+                                <p>Executado antes da tela de seleção ser exibida. Configura botões de função.</p>
                                 <pre><code>INITIALIZATION.
   DATA: wl_action TYPE smp_dyntxt.
-  
+
   wl_action-text = text-t03.
   wl_action-icon_text = text-t03.
   wl_action-quickinfo = text-t03.
   wl_action-icon_id = icon_personal_settings.
-  
-  sscrfields-functxt_01 = wl_action.</code></pre>
+  sscrfields-functxt_01 = wl_action.
 
-                                <div class="info-box">
-                                    <strong>⏰ Quando:</strong> Antes da tela aparecer (1ª vez)<br>
-                                    <strong>🎯 Função:</strong> Configura o botão F1 com ícone e texto<br>
-                                    <strong>✅ Resultado:</strong> Botão "Configurações Pessoais" aparece na tela
-                                </div>
-
-                                <h3>🔹 AT SELECTION-SCREEN ON p_regio</h3>
-                                <pre><code>AT SELECTION-SCREEN ON p_regio.
-  PERFORM zf_valida_regio.</code></pre>
-
+  CLEAR wl_action.
+  wl_action-text = text-t04.
+  wl_action-icon_text = text-t04.
+  wl_action-quickinfo = text-t04.
+  wl_action-icon_id = icon_assign.
+  sscrfields-functxt_02 = wl_action.</code></pre>
                                 <ul>
-                                    <li><strong>Quando:</strong> Ao sair do campo p_regio (região)</li>
-                                    <li><strong>Função:</strong> Valida se a região existe</li>
-                                    <li><strong>Chama:</strong> Form zf_valida_regio</li>
+                                    <li>Configura FC01 com ícone de configurações pessoais</li>
+                                    <li>Configura FC02 com ícone de atribuição</li>
+                                    <li>Textos vêm de text-symbols</li>
                                 </ul>
 
-                                <h3>🔹 AT SELECTION-SCREEN</h3>
+                                <h3>🔹 2. AT SELECTION-SCREEN ON p_regio</h3>
+                                <p>Valida campo região quando usuário sair dele (validação de campo).</p>
+                                <pre><code>AT SELECTION-SCREEN ON p_regio.
+  PERFORM zf_valida_regio.</code></pre>
+                                <p>Chama FORM que valida se região existe usando function module customizada.</p>
+
+                                <h3>🔹 3. AT SELECTION-SCREEN</h3>
+                                <p>Executado quando usuário clica nos botões de função.</p>
                                 <pre><code>AT SELECTION-SCREEN.
   CASE sy-ucomm.
     WHEN 'FC01'.
-      PERFORM zf_exibe_cliente.
+      PERFORM zf_exibe_cliente.  "Exibe transação XD03
+    WHEN 'FC02'.
+      PERFORM zf_exibe_stvarv.   "Exibe transação STVARV
   ENDCASE.</code></pre>
-
                                 <ul>
-                                    <li><strong>Quando:</strong> Ao clicar em botões da tela</li>
-                                    <li><code>sy-ucomm</code> - Código do comando executado</li>
-                                    <li><code>FC01</code> - Código do botão F1</li>
-                                    <li><strong>Função:</strong> Abre tela de cliente (XD03)</li>
+                                    <li><code>sy-ucomm</code> - Contém o código do botão pressionado</li>
+                                    <li>FC01 - Abre dados do cliente</li>
+                                    <li>FC02 - Abre manutenção de variáveis</li>
                                 </ul>
 
-                                <h3>🔹 AT SELECTION-SCREEN OUTPUT</h3>
+                                <h3>🔹 4. AT SELECTION-SCREEN OUTPUT</h3>
+                                <p>Controla visibilidade de campos baseado em radiobuttons.</p>
                                 <pre><code>AT SELECTION-SCREEN OUTPUT.
   LOOP AT SCREEN.
     IF r_op1 IS NOT INITIAL.
       CASE screen-group1.
         WHEN 'M1'.
-          screen-active = 1.  → Ativa campos do grupo M1
+          screen-active = 1.  "Mostra s_kunnr
         WHEN 'M2'.
-          screen-active = 0.  → Desativa campos do grupo M2
+          screen-active = 0.  "Esconde p_land1/p_regio
       ENDCASE.
     ELSE.
-      [... inverso ...]
+      CASE screen-group1.
+        WHEN 'M1'.
+          screen-active = 0.  "Esconde s_kunnr
+        WHEN 'M2'.
+          screen-active = 1.  "Mostra p_land1/p_regio
+      ENDCASE.
     ENDIF.
     MODIFY SCREEN.
   ENDLOOP.</code></pre>
 
-                                <div class="success-box">
-                                    <strong>⏰ Quando:</strong> Antes de exibir a tela (sempre)<br>
-                                    <strong>🎯 Função:</strong> Controla quais campos aparecem<br>
-                                    <strong>📌 Lógica:</strong><br>
-                                    - Se r_op1 marcado → mostra s_kunnr (M1), esconde p_land1/p_regio (M2)<br>
-                                    - Se r_op2 marcado → esconde s_kunnr (M1), mostra p_land1/p_regio (M2)
+                                <div class="info-box">
+                                    <strong>Lógica:</strong><br>
+                                    • Se r_op1 marcado → Mostra s_kunnr (M1), esconde p_land1/p_regio (M2)<br>
+                                    • Se r_op2 marcado → Esconde s_kunnr (M1), mostra p_land1/p_regio (M2)<br>
+                                    <strong>Efeito:</strong> Tela dinâmica que se adapta à opção escolhida
                                 </div>
                             </div>
                         </div>
@@ -352,38 +437,24 @@ END OF tp_kna1,</code></pre>
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <div class="accordion-title">
-                                <span class="accordion-icon">🔧</span>
-                                <span>Arquivo F01 (Sub-rotinas)</span>
+                                <span class="accordion-icon">⚙️</span>
+                                <span>Arquivo F01 (Forms)</span>
                             </div>
                             <span class="accordion-arrow">▶</span>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
                                 <h3>🔹 FORM zf_seleciona_dados</h3>
+                                <p><strong>Propósito:</strong> Buscar dados de clientes e tabelas relacionadas.</p>
 
-                                <h4>Bloco 1: Declarações</h4>
-                                <pre><code>DATA: vl_bukrs       TYPE bukrs,
-      tl_kna1        TYPE tp_t_kna1,
-      tl_knvv        TYPE tp_t_knvv,
-      tl_knb1        TYPE tp_t_knb1,
-      tl_adrc        TYPE tp_t_adrc,
-      tl_tvarvc_full TYPE tp_t_tvarvc_full.</code></pre>
-                                <p>Declara variáveis locais (tabelas internas)</p>
-
-                                <h4>Bloco 2: Busca Parâmetros</h4>
+                                <h4>1. Busca Parâmetros Sistema (TVARVC)</h4>
                                 <pre><code>SELECT sign opti low high
   INTO TABLE tl_tvarvc_full
   FROM tvarvc
-  WHERE name = 'ZCAPAC_AL_BUKRS_S' AND
-        type = 'S'.</code></pre>
+  WHERE name = 'ZCAPAC_JL_BUKRS_S' AND type = 'S'.</code></pre>
+                                <p>Busca lista de empresas permitidas configuradas em TVARVC.</p>
 
-                                <div class="info-box">
-                                    <strong>🎯 Função:</strong> Busca empresas permitidas (filtro)<br>
-                                    <strong>📦 tvarvc:</strong> Tabela de variáveis/parâmetros do sistema<br>
-                                    <strong>💼 Uso posterior:</strong> Filtrar clientes por empresa autorizada
-                                </div>
-
-                                <h4>Bloco 3: Seleção Condicional</h4>
+                                <h4>2. Busca Clientes (KNA1)</h4>
                                 <pre><code>IF r_op1 IS NOT INITIAL.
   SELECT kunnr name1 land1 regio adrnr
     INTO TABLE tl_kna1
@@ -396,106 +467,269 @@ ELSE.
     WHERE land1 = p_land1
     AND regio = p_regio.
 ENDIF.</code></pre>
+                                <p>Busca de acordo com opção: por número cliente OU por país/região.</p>
 
-                                <ul>
-                                    <li><strong>Opção 1:</strong> Busca por número de cliente</li>
-                                    <li><strong>Opção 2:</strong> Busca por país e região</li>
-                                </ul>
+                                <h4>3. Busca Org. Vendas (KNVV)</h4>
+                                <pre><code>SELECT kunnr vkorg
+  FROM knvv
+  INTO TABLE tl_knvv
+  FOR ALL ENTRIES IN tl_kna1
+  WHERE kunnr EQ tl_kna1-kunnr.</code></pre>
 
-                                <h4>Bloco 4: Seleções Complementares</h4>
-                                <pre><code>IF sy-subrc IS INITIAL.
-  SELECT kunnr vkorg
-    FROM knvv
-    INTO TABLE tl_knvv
-    FOR ALL ENTRIES IN tl_kna1
-    WHERE kunnr EQ tl_kna1-kunnr.</code></pre>
+                                <h4>4. Busca Empresas (KNB1)</h4>
+                                <pre><code>SELECT kunnr bukrs
+  FROM knb1
+  INTO TABLE tl_knb1
+  FOR ALL ENTRIES IN tl_kna1
+  WHERE kunnr EQ tl_kna1-kunnr.
 
-                                <div class="success-box">
-                                    <strong>✅ sy-subrc IS INITIAL:</strong> Se encontrou clientes<br>
-                                    <strong>⚡ FOR ALL ENTRIES:</strong> Busca dados relacionados aos clientes
-                                    encontrados<br>
-                                    <strong>📊 Busca:</strong><br>
-                                    - Organização de vendas (knvv)<br>
-                                    - Empresa (knb1)<br>
-                                    - Endereço/Cidade (adrc)
+IF sy-subrc IS INITIAL.
+  SORT tl_knb1 BY kunnr.
+ENDIF.</code></pre>
+                                <p>Ordena para usar BINARY SEARCH depois.</p>
+
+                                <h4>5. Busca Endereços (ADRC)</h4>
+                                <pre><code>SELECT addrnumber city1
+  INTO TABLE tl_adrc
+  FROM adrc
+  FOR ALL ENTRIES IN tl_kna1
+  WHERE addrnumber EQ tl_kna1-adrnr.
+
+IF sy-subrc IS INITIAL.
+  SORT tl_adrc BY addrnumber.
+ENDIF.</code></pre>
+
+                                <h4>6. Processa Dados</h4>
+                                <pre><code>PERFORM zf_trata_dados USING tl_kna1 tl_knvv tl_knb1 tl_adrc tl_tvarvc_full.</code></pre>
+
+                                <div class="warning-box">
+                                    <strong>⚠️ FOR ALL ENTRIES:</strong> Técnica essencial para evitar SELECTs dentro de LOOP. 
+                                    Cuidado: sempre verificar se tabela interna não está vazia antes!
                                 </div>
 
                                 <h3>🔹 FORM zf_trata_dados</h3>
-                                <p><strong>Função Principal:</strong> Processa os dados brutos e monta estrutura de
-                                    saída</p>
+                                <p><strong>Propósito:</strong> Combinar dados de todas as tabelas em estrutura de saída.</p>
 
-                                <h4>Lógica do LOOP</h4>
                                 <pre><code>LOOP AT ft_kna1 INTO wl_kna1.
-  wl_saida-cliente = wl_kna1-kunnr.
-  wl_saida-nome    = wl_kna1-name1.
-  
+  wl_saida-kunnr = wl_kna1-kunnr.
+  wl_saida-name1 = wl_kna1-name1.
+
+  "Busca org. vendas
   READ TABLE ft_knvv INTO wl_knvv WITH KEY kunnr = wl_kna1-kunnr.
   IF sy-subrc IS INITIAL.
-    wl_saida-org_vend = wl_knvv-vkorg.
-  ENDIF.</code></pre>
+    wl_saida-vkorg = wl_knvv-vkorg.
+  ENDIF.
 
-                                <p><strong>Para cada cliente:</strong></p>
-                                <ol>
-                                    <li>Copia número e nome</li>
-                                    <li>Busca organização de vendas (READ TABLE)</li>
-                                    <li>Busca empresa (com BINARY SEARCH - mais rápido)</li>
-                                    <li>Valida se empresa está autorizada</li>
-                                    <li>Busca cidade</li>
-                                    <li>Adiciona à tabela de saída (APPEND)</li>
-                                </ol>
+  "Busca empresa
+  READ TABLE ft_knb1 INTO wl_knb1 
+    WITH KEY kunnr = wl_kna1-kunnr BINARY SEARCH.
+  IF sy-subrc IS INITIAL.
+    "Verifica se empresa está na TVARVC
+    READ TABLE ft_tvarvc TRANSPORTING NO FIELDS 
+      WITH KEY low = wl_knb1-bukrs.
+    IF sy-subrc EQ 0.
+      wl_saida-empresa = wl_knb1-bukrs.
+    ELSE.
+      CLEAR wl_saida.
+      CONTINUE.  "Pula cliente se empresa não autorizada
+    ENDIF.
+  ELSE.
+    CLEAR wl_saida.
+    CONTINUE.
+  ENDIF.
 
-                                <h4>Validação de Empresa</h4>
-                                <pre><code>READ TABLE ft_tvarvc TRANSPORTING NO FIELDS WITH KEY low = wl_knb1-bukrs.
-IF sy-subrc EQ 0.
-  wl_saida-empresa = wl_knb1-bukrs.
-ELSE.
+  "Busca cidade
+  READ TABLE ft_adrc INTO wl_adrc 
+    WITH KEY addrnumber = wl_kna1-adrnr BINARY SEARCH.
+  IF sy-subrc IS INITIAL.
+    wl_saida-cidade = wl_adrc-city1.
+  ENDIF.
+
+  APPEND wl_saida TO tl_saida.
   CLEAR wl_saida.
-  CONTINUE.  → Pula este cliente
-ENDIF.</code></pre>
+ENDLOOP.</code></pre>
 
-                                <div class="warning-box">
-                                    <strong>🎯 Função:</strong> Verifica se empresa está na lista autorizada<br>
-                                    <strong>⏭️ CONTINUE:</strong> Ignora cliente se empresa não autorizada
+                                <div class="success-box">
+                                    <strong>✓ FILTRO IMPORTANTE:</strong> Apenas clientes cuja empresa (BUKRS) está na 
+                                    tabela TVARVC são incluídos no resultado. CONTINUE pula registros não autorizados.
                                 </div>
 
+                                <h4>Decisão de Exibição</h4>
+                                <pre><code>IF tl_saida IS NOT INITIAL.
+  IF p_alv IS NOT INITIAL.
+    PERFORM zf_monta_alv USING tl_saida ft_knvv.
+  ELSE.
+    PERFORM zf_imprime_dados USING tl_saida.
+  ENDIF.
+ELSE.
+  MESSAGE e001.  "Não há dados
+ENDIF.</code></pre>
+
                                 <h3>🔹 FORM zf_imprime_dados</h3>
+                                <p><strong>Propósito:</strong> Exibir dados em formato lista simples (WRITE).</p>
                                 <pre><code>LOOP AT ft_output INTO wl_saida.
-  WRITE: / 'Cliente:', wl_saida-cliente, 
-           'Nome:', wl_saida-nome, 
-           'Org. Vendas:', wl_saida-org_vend,
+  WRITE: / 'Cliente:', wl_saida-kunnr, 
+           'Nome:', wl_saida-name1, 
+           'Org. Vendas:', wl_saida-vkorg,
            'Empresa:', wl_saida-empresa, 
            'Cidade:', wl_saida-cidade.
 ENDLOOP.</code></pre>
 
-                                <ul>
-                                    <li><code>WRITE</code> - Comando de saída</li>
-                                    <li><code>/</code> - Nova linha</li>
-                                </ul>
+                                <h3>🔹 FORM zf_monta_alv</h3>
+                                <p><strong>Propósito:</strong> Montar e exibir ALV Grid.</p>
 
-                                <h3>🔹 FORM zf_exibe_cliente</h3>
-                                <pre><code>CALL FUNCTION 'POPUP_TO_CONFIRM'
+                                <h4>Preparação dos Dados</h4>
+                                <pre><code>tg_alv[] = ft_output[].  "Para ALV manual
+
+LOOP AT ft_output INTO DATA(wl_output).
+  CLEAR wl_alv2.
+  MOVE-CORRESPONDING wl_output TO wl_alv2.
+  wl_alv2-bukrs = wl_output-empresa.
+  wl_alv2-city1 = wl_output-cidade.
+  APPEND wl_alv2 TO tg_alv_2[].
+ENDLOOP.</code></pre>
+
+                                <h4>Filtro Específico</h4>
+                                <pre><code>IF p_manual IS INITIAL.
+  LOOP AT tg_alv_2[] INTO wl_alv2.
+    vl_tabix = sy-tabix.
+    IF wl_alv2-kunnr = '0000023425'.
+      DELETE tg_alv_2 INDEX sy-tabix.
+    ENDIF.
+  ENDLOOP.
+ENDIF.</code></pre>
+                                <p>Remove cliente específico hardcoded quando não é modo manual.</p>
+
+                                <h4>Exibição ALV</h4>
+                                <pre><code>IF p_manual IS INITIAL.
+  vl_command = 'USERCOMMAND'.
+  PERFORM zf_monta_fieldcat_function CHANGING tl_fieldcat.
+  
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      i_callback_program      = sy-cprog
+      it_fieldcat             = tl_fieldcat
+      i_callback_user_command = vl_command
+    TABLES
+      t_outtab = tg_alv_2[]
+    EXCEPTIONS
+      program_error = 1
+      OTHERS = 2.
+ELSE.
+  PERFORM zf_monta_fieldcat CHANGING tl_fieldcat.
+  
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      i_callback_program = sy-cprog
+      it_fieldcat = tl_fieldcat
+    TABLES
+      t_outtab = tg_alv[]
+    EXCEPTIONS
+      program_error = 1
+      OTHERS = 2.
+ENDIF.</code></pre>
+
+                                <h3>🔹 FORM zf_monta_fieldcat</h3>
+                                <p><strong>Propósito:</strong> Criar fieldcatalog manualmente.</p>
+                                <pre><code>wl_fieldcat-fieldname = 'CLIENTE'.
+wl_fieldcat-datatype = 'KUNNR'.
+wl_fieldcat-col_pos = '1'.
+wl_fieldcat-seltext_s = text-t08.
+wl_fieldcat-seltext_m = text-t08.
+wl_fieldcat-seltext_l = text-t08.
+APPEND wl_fieldcat TO ct_fieldcat[].</code></pre>
+                                <p>Repete para todos os campos: CLIENTE, NOME, ORG_VENDA, EMPRESA, CIDADE.</p>
+
+                                <h3>🔹 FORM zf_monta_fieldcat_function</h3>
+                                <p><strong>Propósito:</strong> Criar fieldcatalog automaticamente e customizar.</p>
+
+                                <h4>1. Gera Fieldcatalog Automático</h4>
+                                <pre><code>CALL FUNCTION 'REUSE_ALV_FIELDCATALOG_MERGE'
   EXPORTING
-    text_question         = text-t07
-    text_button_1         = text-t05
-    text_button_2         = text-t06
-  IMPORTING
-    answer                = vl_resposta.</code></pre>
+    i_structure_name = 'ZST_CAPAC_JL_01'
+  CHANGING
+    ct_fieldcat = ct_fieldcat.</code></pre>
 
-                                <p>Exibe popup de confirmação: "Deseja imprimir?" com botões Sim/Não</p>
-
-                                <pre><code>IF vl_resposta EQ cl_resposta-sim.
-  SET PARAMETER ID 'KUN' FIELD s_kunnr-low.
-  CALL TRANSACTION 'XD03' AND SKIP FIRST SCREEN.</code></pre>
+                                <h4>2. Customiza Campos</h4>
+                                <pre><code>LOOP AT ct_fieldcat ASSIGNING FIELD-SYMBOL(&lt;fs_fieldcat2&gt;).
+  CASE &lt;fs_fieldcat2&gt;-fieldname.
+    WHEN 'CITY1'.
+      &lt;fs_fieldcat2&gt;-edit = abap_true.  "Permite edição
+    WHEN 'VKORG' OR 'BUKRS'.
+      &lt;fs_fieldcat2&gt;-no_out = abap_true.  "Oculta colunas
+    WHEN 'KUNNR'.
+      &lt;fs_fieldcat2&gt;-seltext_s = text-t13.  "Muda texto
+      &lt;fs_fieldcat2&gt;-seltext_m = text-t13.
+      &lt;fs_fieldcat2&gt;-seltext_l = text-t13.
+  ENDCASE.
+ENDLOOP.</code></pre>
 
                                 <div class="info-box">
-                                    <strong>Se SIM:</strong><br>
-                                    - Define parâmetro KUN com número do cliente<br>
-                                    - Abre transação XD03 (Exibir Cliente)<br>
-                                    - SKIP FIRST SCREEN: Pula tela inicial
+                                    <strong>📝 Campo Editável:</strong> CITY1 pode ser editado diretamente no ALV.
+                                    Colunas VKORG e BUKRS ficam ocultas mas permanecem na estrutura de dados.
                                 </div>
 
+                                <h3>🔹 FORM usercommand</h3>
+                                <p><strong>Propósito:</strong> Capturar evento de salvamento no ALV e gravar no banco.</p>
+                                <pre><code>FORM usercommand USING r_ucomm LIKE sy-ucomm
+                       rs_selfield TYPE slis_selfield.
+
+  IF r_ucomm EQ '&DATA_SAVE'.
+    LOOP AT tg_alv_2 INTO DATA(wl_alv).
+      wl_clientes-kunnr = wl_alv-kunnr.
+      wl_clientes-name1 = wl_alv-name1.
+      wl_clientes-bukrs = wl_alv-bukrs.
+      APPEND wl_clientes TO tl_clientes[].
+    ENDLOOP.
+
+    IF tl_clientes[] IS NOT INITIAL.
+      MODIFY zcapac_jl_prog FROM TABLE tl_clientes[].
+      IF sy-subrc EQ 0.
+        COMMIT WORK.
+      ELSE.
+        ROLLBACK WORK.
+      ENDIF.
+    ENDIF.
+  ENDIF.
+ENDFORM.</code></pre>
+
+                                <div class="success-box">
+                                    <strong>💾 Salvamento:</strong> Quando usuário clica em salvar no ALV (&DATA_SAVE), 
+                                    dados editados são gravados na tabela customizada ZCAPAC_JL_PROG com controle de transação.
+                                </div>
+
+                                <h3>🔹 FORM zf_exibe_cliente</h3>
+                                <p><strong>Propósito:</strong> Exibir transação XD03 para o cliente selecionado.</p>
+                                <pre><code>CALL FUNCTION 'POPUP_TO_CONFIRM'
+  EXPORTING
+    text_question = text-t07
+    text_button_1 = text-t05
+    text_button_2 = text-t06
+    default_button = '1'
+    display_cancel_button = 'X'
+  IMPORTING
+    answer = vl_resposta
+  EXCEPTIONS
+    text_not_found = 1
+    OTHERS = 2.
+
+IF sy-subrc EQ 0.
+  IF vl_resposta EQ cl_resposta-sim.
+    SET PARAMETER ID 'KUN' FIELD s_kunnr-low.
+    CALL TRANSACTION 'XD03' AND SKIP FIRST SCREEN.
+  ELSE.
+    RETURN.
+  ENDIF.
+ENDIF.</code></pre>
+                                <ul>
+                                    <li>Mostra popup de confirmação</li>
+                                    <li>Se sim: Preenche parâmetro KUN e chama XD03 (exibir cliente)</li>
+                                    <li>SKIP FIRST SCREEN pula tela inicial da transação</li>
+                                </ul>
+
                                 <h3>🔹 FORM zf_valida_regio</h3>
-                                <pre><code>CALL FUNCTION 'ZCAPAC_AL_CHECK_REGIO'
+                                <p><strong>Propósito:</strong> Validar se região existe.</p>
+                                <pre><code>CALL FUNCTION 'ZCAPAC_JL_CHECK_REGIO'
   EXPORTING
     iv_regio = p_regio
   IMPORTING
@@ -505,12 +739,12 @@ IF vl_check IS INITIAL.
   MESSAGE s004 DISPLAY LIKE 'E' WITH p_regio.
   RETURN.
 ENDIF.</code></pre>
+                                <p>Usa function module customizada para validação. Se inválida, exibe mensagem.</p>
 
-                                <ul>
-                                    <li><strong>Função:</strong> Valida se região existe</li>
-                                    <li><strong>Function Module:</strong> Função customizada de validação</li>
-                                    <li><strong>Se inválida:</strong> Exibe mensagem de erro e interrompe</li>
-                                </ul>
+                                <h3>🔹 FORM zf_exibe_stvarv</h3>
+                                <p><strong>Propósito:</strong> Abrir transação de manutenção de variáveis.</p>
+                                <pre><code>CALL TRANSACTION 'STVARV'.</code></pre>
+                                <p>Simples chamada à transação STVARV para manutenção de TVARVC.</p>
                             </div>
                         </div>
                     </div>
@@ -530,40 +764,232 @@ ENDIF.</code></pre>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
+                                <h3>📊 Diagrama de Fluxo</h3>
                                 <div class="flow-diagram">
-                                    <pre><code>1. USUÁRIO ABRE O PROGRAMA
-   ↓
-2. INITIALIZATION
-   → Configura botão F1
-   ↓
+                                    <pre><code>
+1. INITIALIZATION
+   └─> Configura botões FC01 e FC02
+   
+2. Usuário preenche tela
+   └─> Marca r_op1 ou r_op2
+   └─> Preenche s_kunnr OU p_land1/p_regio
+   └─> Marca/desmarca p_alv e p_manual
+   
 3. AT SELECTION-SCREEN OUTPUT
-   → Mostra/Esconde campos conforme radio button
-   ↓
-4. USUÁRIO PREENCHE DADOS
-   ↓
-5. AT SELECTION-SCREEN ON p_regio (se preenchido)
-   → Valida região
-   ↓
-6. USUÁRIO CLICA EM BOTÃO F1 (opcional)
-   → AT SELECTION-SCREEN
-   → zf_exibe_cliente
-   → Abre XD03
-   ↓
-7. USUÁRIO PRESSIONA F8 (Executar)
-   ↓
-8. START-OF-SELECTION
-   → zf_seleciona_dados
-      ├─ Busca parâmetros (empresas)
-      ├─ Busca clientes (kna1)
-      ├─ Busca org.vendas (knvv)
-      ├─ Busca empresas (knb1)
-      ├─ Busca endereços (adrc)
-      └─ zf_trata_dados
-         ├─ Combina dados
-         ├─ Valida empresas
-         └─ zf_imprime_dados
-            └─ WRITE (exibe na tela)</code></pre>
+   └─> Mostra/esconde campos conforme radiobutton
+   
+4. AT SELECTION-SCREEN ON p_regio
+   └─> Valida região (se preenchida)
+   
+5. Usuário pode clicar FC01 ou FC02
+   AT SELECTION-SCREEN
+   ├─> FC01: Popup + XD03
+   └─> FC02: Abre STVARV
+   
+6. Usuário executa (F8)
+   START-OF-SELECTION
+   └─> PERFORM zf_seleciona_dados
+       ├─> SELECT TVARVC (empresas permitidas)
+       ├─> SELECT KNA1 (clientes)
+       ├─> SELECT KNVV (org. vendas)
+       ├─> SELECT KNB1 (empresas)
+       ├─> SELECT ADRC (endereços)
+       └─> PERFORM zf_trata_dados
+           ├─> LOOP clientes
+           ├─> READ vendas, empresas, endereços
+           ├─> Filtra por empresa TVARVC
+           └─> Monta tabela saída
+           
+7. Exibição
+   ├─> Se p_alv desmarcado
+   │   └─> PERFORM zf_imprime_dados
+   │       └─> WRITE lista simples
+   │
+   └─> Se p_alv marcado
+       └─> PERFORM zf_monta_alv
+           ├─> Prepara tg_alv ou tg_alv_2
+           ├─> Remove cliente '0000023425' (se não manual)
+           │
+           ├─> Se p_manual marcado
+           │   └─> zf_monta_fieldcat (manual)
+           │       └─> REUSE_ALV_GRID_DISPLAY
+           │
+           └─> Se p_manual desmarcado
+               └─> zf_monta_fieldcat_function (automático)
+                   ├─> REUSE_ALV_FIELDCATALOG_MERGE
+                   ├─> Customiza: CITY1 editável, oculta VKORG/BUKRS
+                   └─> REUSE_ALV_GRID_DISPLAY com USERCOMMAND
+                   
+8. No ALV Function (se usuário editar e salvar)
+   FORM usercommand
+   └─> Captura &DATA_SAVE
+       └─> MODIFY zcapac_jl_prog
+           ├─> COMMIT WORK (sucesso)
+           └─> ROLLBACK WORK (erro)
+                                    </code></pre>
                                 </div>
+
+                                <h3>🎯 Pontos-Chave do Fluxo</h3>
+                                <table>
+                                    <tr>
+                                        <th>Etapa</th>
+                                        <th>Tecnologia</th>
+                                        <th>Propósito</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Tela Dinâmica</td>
+                                        <td>AT SELECTION-SCREEN OUTPUT</td>
+                                        <td>Adapta campos visíveis</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Validação</td>
+                                        <td>AT SELECTION-SCREEN ON</td>
+                                        <td>Valida região</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Botões Custom</td>
+                                        <td>FUNCTION KEY + AT SELECTION-SCREEN</td>
+                                        <td>Acesso rápido XD03/STVARV</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Otimização</td>
+                                        <td>FOR ALL ENTRIES + BINARY SEARCH</td>
+                                        <td>Performance</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Filtro Negócio</td>
+                                        <td>TVARVC + CONTINUE</td>
+                                        <td>Apenas empresas autorizadas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flexibilidade</td>
+                                        <td>3 modos exibição</td>
+                                        <td>Lista, ALV manual, ALV function</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Edição</td>
+                                        <td>ALV editável + USERCOMMAND</td>
+                                        <td>Edita cidade e salva</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Funcionalidades Especiais -->
+            <section id="funcionalidades" class="section">
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">⭐</span>
+                                <span>Funcionalidades Especiais</span>
+                            </div>
+                            <span class="accordion-arrow">▶</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <h3>🎨 1. Tela de Seleção Dinâmica</h3>
+                                <ul>
+                                    <li><strong>Radiobuttons Inteligentes:</strong> Campos aparecem/desaparecem automaticamente</li>
+                                    <li><strong>MODIF ID:</strong> Agrupa campos para controle em bloco</li>
+                                    <li><strong>USER-COMMAND:</strong> Dispara evento ao trocar radiobutton</li>
+                                    <li><strong>Resultado:</strong> Interface limpa e intuitiva</li>
+                                </ul>
+
+                                <h3>🔘 2. Botões de Função Customizados</h3>
+                                <table>
+                                    <tr>
+                                        <th>Botão</th>
+                                        <th>Ícone</th>
+                                        <th>Função</th>
+                                        <th>Comportamento</th>
+                                    </tr>
+                                    <tr>
+                                        <td>FC01</td>
+                                        <td>🧑 Settings</td>
+                                        <td>Exibir Cliente</td>
+                                        <td>Popup confirmação → XD03</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FC02</td>
+                                        <td>📋 Assign</td>
+                                        <td>Variáveis</td>
+                                        <td>Abre STVARV diretamente</td>
+                                    </tr>
+                                </table>
+
+                                <h3>✅ 3. Validação de Região</h3>
+                                <pre><code>AT SELECTION-SCREEN ON p_regio.
+  PERFORM zf_valida_regio.
+    └─> CALL FUNCTION 'ZCAPAC_JL_CHECK_REGIO'
+        └─> MESSAGE se inválida</code></pre>
+                                <p>Valida em tempo real se região existe, evitando erros posteriores.</p>
+
+                                <h3>🔒 4. Filtro por Empresas Autorizadas</h3>
+                                <pre><code>Parâmetro TVARVC: ZCAPAC_JL_BUKRS_S
+Tipo: Selection (S)
+Valores: Lista de empresas autorizadas
+
+Exemplo:
+SIGN | OPTI | LOW  | HIGH
+I    | EQ   | BR01 |
+I    | BT   | US01 | US05</code></pre>
+                                <p>Apenas clientes vinculados a empresas na TVARVC são exibidos.</p>
+
+                                <h3>📊 5. Três Modos de Exibição</h3>
+                                <table>
+                                    <tr>
+                                        <th>Modo</th>
+                                        <th>Configuração</th>
+                                        <th>Características</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Lista Simples</td>
+                                        <td>p_alv = OFF</td>
+                                        <td>WRITE clássico, formato texto</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALV Manual</td>
+                                        <td>p_alv = ON<br>p_manual = ON</td>
+                                        <td>Fieldcatalog manual, sem edição</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALV Function</td>
+                                        <td>p_alv = ON<br>p_manual = OFF</td>
+                                        <td>Fieldcatalog automático, CITY1 editável, 
+                                        VKORG/BUKRS ocultos, salvamento banco</td>
+                                    </tr>
+                                </table>
+
+                                <h3>✏️ 6. ALV Editável com Salvamento</h3>
+                                <ul>
+                                    <li><strong>Campo Editável:</strong> CITY1 (cidade)</li>
+                                    <li><strong>Campos Ocultos:</strong> VKORG, BUKRS (dados presentes mas não visíveis)</li>
+                                    <li><strong>Salvamento:</strong> Botão salvar grava em ZCAPAC_JL_PROG</li>
+                                    <li><strong>Transação:</strong> COMMIT/ROLLBACK conforme sucesso</li>
+                                </ul>
+
+                                <div class="warning-box">
+                                    <strong>⚠️ Cliente Hardcoded:</strong> Cliente '0000023425' é removido da exibição 
+                                    quando em modo ALV Function (p_manual = OFF). Provavelmente usado para testes.
+                                </div>
+
+                                <h3>🔗 7. Integração com Transações SAP</h3>
+                                <ul>
+                                    <li><strong>XD03:</strong> Exibir dados mestre cliente com SET PARAMETER ID</li>
+                                    <li><strong>STVARV:</strong> Manutenção de variáveis TVARVC</li>
+                                    <li><strong>SKIP FIRST SCREEN:</strong> Pula tela inicial para agilizar</li>
+                                </ul>
+
+                                <h3>💡 8. Popup Interativo</h3>
+                                <pre><code>POPUP_TO_CONFIRM
+├─> Pergunta customizada (text-t07)
+├─> Botões customizados (text-t05, text-t06)
+├─> Botão padrão configurável
+└─> Opção de cancelamento</code></pre>
                             </div>
                         </div>
                     </div>
@@ -576,44 +1002,191 @@ ENDIF.</code></pre>
                     <div class="accordion-item">
                         <div class="accordion-header">
                             <div class="accordion-title">
-                                <span class="accordion-icon">🎯</span>
-                                <span>Conceitos ABAP Importantes</span>
+                                <span class="accordion-icon">🎓</span>
+                                <span>Conceitos ABAP Utilizados</span>
                             </div>
                             <span class="accordion-arrow">▶</span>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <h3>✅ SELECT com FOR ALL ENTRIES</h3>
+                                <h3>1️⃣ Eventos de Programa</h3>
+                                <table>
+                                    <tr>
+                                        <th>Evento</th>
+                                        <th>Quando Ocorre</th>
+                                        <th>Uso no Programa</th>
+                                    </tr>
+                                    <tr>
+                                        <td>INITIALIZATION</td>
+                                        <td>Antes da tela</td>
+                                        <td>Configura botões função</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AT SELECTION-SCREEN OUTPUT</td>
+                                        <td>Antes exibir tela</td>
+                                        <td>Controla visibilidade campos</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AT SELECTION-SCREEN ON campo</td>
+                                        <td>Ao sair do campo</td>
+                                        <td>Valida p_regio</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AT SELECTION-SCREEN</td>
+                                        <td>Ao executar</td>
+                                        <td>Captura FC01/FC02</td>
+                                    </tr>
+                                    <tr>
+                                        <td>START-OF-SELECTION</td>
+                                        <td>Início processamento</td>
+                                        <td>Chama lógica principal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>END-OF-SELECTION</td>
+                                        <td>Fim processamento</td>
+                                        <td>Include F01</td>
+                                    </tr>
+                                </table>
+
+                                <h3>2️⃣ Tipos de Campos na Tela</h3>
+                                <table>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Sintaxe</th>
+                                        <th>Características</th>
+                                    </tr>
+                                    <tr>
+                                        <td>PARAMETERS</td>
+                                        <td>PARAMETERS: p_campo TYPE tipo</td>
+                                        <td>Campo simples, valor único</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SELECT-OPTIONS</td>
+                                        <td>SELECT-OPTIONS: s_campo FOR tabela-campo</td>
+                                        <td>Range, permite múltiplos valores, intervalos, exclusões</td>
+                                    </tr>
+                                    <tr>
+                                        <td>RADIOBUTTON</td>
+                                        <td>PARAMETERS: r_op RADIOBUTTON GROUP g1</td>
+                                        <td>Opções mutuamente exclusivas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CHECKBOX</td>
+                                        <td>PARAMETERS: p_check AS CHECKBOX</td>
+                                        <td>Sim/Não, marcado/desmarcado</td>
+                                    </tr>
+                                </table>
+
+                                <h3>3️⃣ Controle Dinâmico de Tela</h3>
+                                <pre><code>MODIF ID m1/m2  → Agrupa campos
+screen-group1   → Identifica grupo
+screen-active   → 1=visível, 0=invisível
+MODIFY SCREEN   → Aplica mudanças</code></pre>
+
+                                <h3>4️⃣ Técnicas de Performance</h3>
                                 <ul>
-                                    <li><strong>O quê:</strong> Busca dados relacionados sem fazer SELECT dentro de LOOP
+                                    <li><strong>FOR ALL ENTRIES:</strong> Substitui SELECTs em LOOP
+                                        <pre><code>SELECT campos FROM tabela
+  FOR ALL ENTRIES IN tabela_interna
+  WHERE campo = tabela_interna-campo.</code></pre>
                                     </li>
-                                    <li><strong>Vantagem:</strong> Performance (menos acessos ao banco)</li>
+                                    <li><strong>BINARY SEARCH:</strong> Busca rápida (requer SORT antes)
+                                        <pre><code>SORT tabela BY campo.
+READ TABLE tabela ... BINARY SEARCH.</code></pre>
+                                    </li>
+                                    <li><strong>TRANSPORTING NO FIELDS:</strong> Apenas verifica existência
+                                        <pre><code>READ TABLE tabela TRANSPORTING NO FIELDS WITH KEY ...</code></pre>
+                                    </li>
+                                    <li><strong>TYPES customizados:</strong> Apenas campos necessários (não SELECT *)</li>
                                 </ul>
 
-                                <h3>✅ BINARY SEARCH</h3>
+                                <h3>5️⃣ Tabelas Internas</h3>
+                                <table>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Declaração</th>
+                                        <th>Características</th>
+                                    </tr>
+                                    <tr>
+                                        <td>STANDARD</td>
+                                        <td>TYPE STANDARD TABLE OF</td>
+                                        <td>Acesso por índice, permite duplicatas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TABLE OF</td>
+                                        <td>TYPE TABLE OF</td>
+                                        <td>Padrão STANDARD</td>
+                                    </tr>
+                                </table>
+
+                                <h3>6️⃣ ALV (ABAP List Viewer)</h3>
+                                <h4>Fieldcatalog Manual</h4>
+                                <pre><code>wl_fieldcat-fieldname = 'CAMPO'.
+wl_fieldcat-datatype = 'TIPO'.
+wl_fieldcat-col_pos = '1'.
+wl_fieldcat-seltext_s/m/l = 'Texto'.
+APPEND wl_fieldcat TO ct_fieldcat.</code></pre>
+
+                                <h4>Fieldcatalog Automático</h4>
+                                <pre><code>REUSE_ALV_FIELDCATALOG_MERGE
+  i_structure_name = 'ESTRUTURA_DDIC'
+  ct_fieldcat = ct_fieldcat.</code></pre>
+
+                                <h4>Customizações Comuns</h4>
                                 <ul>
-                                    <li><strong>O quê:</strong> Busca binária em tabela ordenada</li>
-                                    <li><strong>Requer:</strong> SORT antes do READ TABLE</li>
-                                    <li><strong>Vantagem:</strong> Muito mais rápido</li>
+                                    <li><code>edit = abap_true</code> - Campo editável</li>
+                                    <li><code>no_out = abap_true</code> - Campo oculto</li>
+                                    <li><code>hotspot = 'X'</code> - Campo clicável</li>
+                                    <li><code>key = 'X'</code> - Coluna chave (cor diferente)</li>
                                 </ul>
 
-                                <h3>✅ MODIF ID</h3>
+                                <h3>7️⃣ sy-subrc e Tratamento de Erros</h3>
+                                <table>
+                                    <tr>
+                                        <th>Valor</th>
+                                        <th>Significado</th>
+                                        <th>Verificação</th>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>Sucesso</td>
+                                        <td>sy-subrc EQ 0<br>sy-subrc IS INITIAL</td>
+                                    </tr>
+                                    <tr>
+                                        <td>≠ 0</td>
+                                        <td>Erro/Não encontrado</td>
+                                        <td>sy-subrc NE 0<br>sy-subrc IS NOT INITIAL</td>
+                                    </tr>
+                                </table>
+
+                                <h3>8️⃣ Operações de Banco de Dados</h3>
                                 <ul>
-                                    <li><strong>O quê:</strong> Agrupa campos para controle dinâmico</li>
-                                    <li><strong>Uso:</strong> AT SELECTION-SCREEN OUTPUT</li>
+                                    <li><strong>SELECT:</strong> Buscar dados</li>
+                                    <li><strong>MODIFY:</strong> Inserir ou atualizar (usa chave)</li>
+                                    <li><strong>INSERT:</strong> Inserir novo registro</li>
+                                    <li><strong>UPDATE:</strong> Atualizar existente</li>
+                                    <li><strong>COMMIT WORK:</strong> Confirma transação</li>
+                                    <li><strong>ROLLBACK WORK:</strong> Desfaz transação</li>
                                 </ul>
 
-                                <h3>✅ sy-subrc</h3>
-                                <ul>
-                                    <li><strong>O quê:</strong> Código de retorno de operações</li>
-                                    <li><strong>0 ou IS INITIAL:</strong> Sucesso</li>
-                                    <li><strong>Diferente de 0:</strong> Erro/Não encontrado</li>
-                                </ul>
+                                <h3>9️⃣ Function Modules</h3>
+                                <pre><code>CALL FUNCTION 'NOME_FUNCAO'
+  EXPORTING
+    parametro_entrada = valor
+  IMPORTING
+    parametro_saida = variavel
+  TABLES
+    tabela = tabela_interna
+  EXCEPTIONS
+    erro1 = 1
+    erro2 = 2
+    OTHERS = 3.</code></pre>
 
-                                <h3>✅ TRANSPORTING NO FIELDS</h3>
+                                <h3>🔟 Transações</h3>
                                 <ul>
-                                    <li><strong>O quê:</strong> Busca sem carregar dados</li>
-                                    <li><strong>Uso:</strong> Apenas verificar existência</li>
+                                    <li><strong>CALL TRANSACTION 'XXXX':</strong> Chama transação</li>
+                                    <li><strong>SET PARAMETER ID 'XXX' FIELD valor:</strong> Preenche campo de memória</li>
+                                    <li><strong>AND SKIP FIRST SCREEN:</strong> Pula tela inicial se parâmetros preenchidos</li>
                                 </ul>
                             </div>
                         </div>
@@ -628,24 +1201,83 @@ ENDIF.</code></pre>
                         <div class="accordion-header">
                             <div class="accordion-title">
                                 <span class="accordion-icon">💡</span>
-                                <span>Dicas para Iniciantes</span>
+                                <span>Dicas e Boas Práticas</span>
                             </div>
                             <span class="accordion-arrow">▶</span>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
-                                <div class="success-box">
-                                    <ol>
-                                        <li><strong>INCLUDES:</strong> Organizam código em arquivos separados</li>
-                                        <li><strong>TYPES:</strong> Defina estruturas otimizadas (só campos necessários)
-                                        </li>
-                                        <li><strong>FOR ALL ENTRIES:</strong> Use para evitar SELECTs em LOOP</li>
-                                        <li><strong>SORT + BINARY SEARCH:</strong> Sempre que possível</li>
-                                        <li><strong>sy-subrc:</strong> Sempre verifique após operações críticas</li>
-                                        <li><strong>CLEAR:</strong> Limpe work areas antes de reusar</li>
-                                        <li><strong>MESSAGE-ID:</strong> Centralize mensagens em classes</li>
-                                    </ol>
+                                <h3>✅ Organização de Código</h3>
+                                <ol>
+                                    <li><strong>Modularize:</strong> Use INCLUDEs para separar declarações, eventos e lógica</li>
+                                    <li><strong>Nomeação Clara:</strong> Prefixos z*, nomes descritivos (zf_seleciona_dados)</li>
+                                    <li><strong>Comentários:</strong> Documente FORMs e lógica complexa</li>
+                                    <li><strong>Indentação:</strong> Mantenha código legível</li>
+                                </ol>
+
+                                <h3>✅ Performance</h3>
+                                <ol>
+                                    <li><strong>Evite SELECT em LOOP:</strong> Use FOR ALL ENTRIES</li>
+                                    <li><strong>Use BINARY SEARCH:</strong> Após SORT de tabela interna</li>
+                                    <li><strong>Selecione apenas campos necessários:</strong> Crie TYPES customizados</li>
+                                    <li><strong>TRANSPORTING NO FIELDS:</strong> Quando só precisa verificar existência</li>
+                                    <li><strong>WHERE em SELECT:</strong> Filtre no banco, não na aplicação</li>
+                                </ol>
+
+                                <h3>✅ Validações</h3>
+                                <ol>
+                                    <li><strong>Sempre verifique sy-subrc:</strong> Após SELECT, READ TABLE, CALL FUNCTION</li>
+                                    <li><strong>IS NOT INITIAL antes de FOR ALL ENTRIES:</strong> Evita erro se tabela vazia</li>
+                                    <li><strong>Valide campos na tela:</strong> AT SELECTION-SCREEN ON campo</li>
+                                    <li><strong>Mensagens claras:</strong> Use MESSAGE-ID e text-symbols</li>
+                                </ol>
+
+                                <h3>✅ ALV</h3>
+                                <ol>
+                                    <li><strong>Fieldcatalog Automático:</strong> Mais rápido e consistente com DDIC</li>
+                                    <li><strong>Customize após gerar:</strong> Modifique edit, no_out, textos</li>
+                                    <li><strong>USERCOMMAND:</strong> Para capturar eventos (salvar, clique, etc)</li>
+                                    <li><strong>Tabela global:</strong> Para USERCOMMAND acessar dados</li>
+                                </ol>
+
+                                <h3>✅ Tela de Seleção</h3>
+                                <ol>
+                                    <li><strong>MODIF ID:</strong> Agrupe campos para controle em bloco</li>
+                                    <li><strong>USER-COMMAND:</strong> Dispare eventos ao mudar radiobutton</li>
+                                    <li><strong>DEFAULT valores:</strong> Facilite uso com valores padrão</li>
+                                    <li><strong>Text-symbols:</strong> Textos traduzíveis (text-t01, text-t02)</li>
+                                </ol>
+
+                                <h3>✅ Banco de Dados</h3>
+                                <ol>
+                                    <li><strong>MODIFY vs INSERT/UPDATE:</strong> MODIFY tenta UPDATE, se falhar faz INSERT</li>
+                                    <li><strong>FROM TABLE:</strong> Mais rápido que LOOP + INSERT individual</li>
+                                    <li><strong>COMMIT/ROLLBACK:</strong> Controle transacional explícito</li>
+                                    <li><strong>Verifique sy-subrc após MODIFY:</strong> Para saber se teve sucesso</li>
+                                </ol>
+
+                                <h3>⚠️ Pontos de Atenção</h3>
+                                <div class="warning-box">
+                                    <ul>
+                                        <li><strong>Cliente hardcoded:</strong> Remover lógica de filtro específico ('0000023425') em produção</li>
+                                        <li><strong>FOR ALL ENTRIES:</strong> Sempre verificar se tabela não está vazia antes</li>
+                                        <li><strong>CLEAR work areas:</strong> Antes de reusar para evitar dados residuais</li>
+                                        <li><strong>SORT antes BINARY SEARCH:</strong> Obrigatório ou pode não encontrar</li>
+                                        <li><strong>Variáveis globais:</strong> tg_alv e tg_alv_2 necessárias para USERCOMMAND</li>
+                                    </ul>
                                 </div>
+
+                                <h3>🚀 Melhorias Sugeridas</h3>
+                                <ol>
+                                    <li>Remover cliente hardcoded ou tornar parametrizável</li>
+                                    <li>Adicionar mais validações de entrada</li>
+                                    <li>Criar mensagens de sucesso após salvamento</li>
+                                    <li>Adicionar LOG de alterações</li>
+                                    <li>Permitir edição de mais campos no ALV</li>
+                                    <li>Adicionar filtros adicionais (status, tipo cliente)</li>
+                                    <li>Exportar para Excel</li>
+                                    <li>Variante padrão para usuários</li>
+                                </ol>
                             </div>
                         </div>
                     </div>
@@ -665,79 +1297,150 @@ ENDIF.</code></pre>
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-body">
+                                <h3>📋 Tabelas Standard SAP</h3>
                                 <table>
                                     <thead>
                                         <tr>
                                             <th>Tabela</th>
+                                            <th>Nome Completo</th>
                                             <th>Descrição</th>
-                                            <th>Dados Principais</th>
+                                            <th>Campos Usados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td><strong>KNA1</strong></td>
-                                            <td>Dados Mestres Cliente</td>
-                                            <td>Número, Nome, País, Região</td>
+                                            <td>General Data in Customer Master</td>
+                                            <td>Dados gerais do cliente</td>
+                                            <td>KUNNR, NAME1, LAND1, REGIO, ADRNR</td>
                                         </tr>
                                         <tr>
                                             <td><strong>KNVV</strong></td>
-                                            <td>Dados de Vendas</td>
-                                            <td>Organização de Vendas</td>
+                                            <td>Customer Master Sales Data</td>
+                                            <td>Dados de vendas</td>
+                                            <td>KUNNR, VKORG</td>
                                         </tr>
                                         <tr>
                                             <td><strong>KNB1</strong></td>
-                                            <td>Dados Contábeis</td>
-                                            <td>Empresa (Bukrs)</td>
+                                            <td>Customer Master Company Code</td>
+                                            <td>Dados contábeis por empresa</td>
+                                            <td>KUNNR, BUKRS</td>
                                         </tr>
                                         <tr>
                                             <td><strong>ADRC</strong></td>
+                                            <td>Addresses</td>
                                             <td>Endereços</td>
-                                            <td>Cidade</td>
+                                            <td>ADDRNUMBER, CITY1</td>
                                         </tr>
                                         <tr>
                                             <td><strong>TVARVC</strong></td>
-                                            <td>Variáveis/Parâmetros</td>
-                                            <td>Configurações do sistema</td>
+                                            <td>Table of Variables</td>
+                                            <td>Variáveis e parâmetros do sistema</td>
+                                            <td>NAME, TYPE, SIGN, OPTI, LOW, HIGH</td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            <!-- Resultado -->
-            <section id="resultado" class="section">
-                <div class="accordion">
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <div class="accordion-title">
-                                <span class="accordion-icon">✨</span>
-                                <span>Resultado Final</span>
-                            </div>
-                            <span class="accordion-arrow">▶</span>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="accordion-body">
-                                <p>O programa exibe uma lista formatada:</p>
-                                <pre><code>Cliente: 0000100001  Nome: Empresa ABC  Org. Vendas: 1000  Empresa: BR01  Cidade: São Paulo
-Cliente: 0000100002  Nome: Empresa XYZ  Org. Vendas: 1000  Empresa: BR01  Cidade: Rio de Janeiro
-...</code></pre>
+                                <h3>📋 Tabela Customizada</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tabela</th>
+                                            <th>Descrição</th>
+                                            <th>Uso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>ZCAPAC_JL_PROG</strong></td>
+                                            <td>Tabela Z para armazenar dados editados</td>
+                                            <td>Salva KUNNR, NAME1, BUKRS após edição no ALV</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                                <div class="success-box">
-                                    <h4>📌 Este programa demonstra:</h4>
-                                    <ul>
-                                        <li>Telas de seleção dinâmicas</li>
-                                        <li>Validações de campo</li>
-                                        <li>Consultas otimizadas ao banco</li>
-                                        <li>Tratamento e combinação de dados</li>
-                                        <li>Interação com transações SAP</li>
-                                        <li>Uso de function modules</li>
-                                    </ul>
-                                    <p><strong>Ótimo exemplo para estudar conceitos fundamentais de ABAP! 🚀</strong>
-                                    </p>
+                                <h3>📋 Estrutura DDIC</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Estrutura</th>
+                                            <th>Uso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>ZST_CAPAC_JL_01</strong></td>
+                                            <td>Estrutura para ALV Function (fieldcatalog automático)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <h3>🔗 Relacionamentos</h3>
+                                <pre><code>KNA1 (Cliente)
+├─→ KNVV (via KUNNR) - Org. Vendas
+├─→ KNB1 (via KUNNR) - Empresa
+└─→ ADRC (via ADRNR) - Endereço
+
+TVARVC (Configuração)
+└─→ Filtra KNB1-BUKRS (empresas permitidas)</code></pre>
+
+                                <h3>⚙️ Parâmetro TVARVC</h3>
+                                <div class="info-box">
+                                    <strong>Nome:</strong> ZCAPAC_JL_BUKRS_S<br>
+                                    <strong>Tipo:</strong> S (Selection)<br>
+                                    <strong>Propósito:</strong> Define quais empresas (BUKRS) são permitidas no relatório<br>
+                                    <strong>Manutenção:</strong> Transação STVARV ou tabela TVARVC<br>
+                                    <strong>Formato:</strong> Range completo (SIGN, OPTI, LOW, HIGH)
                                 </div>
+
+                                <h3>📊 Campos Principais</h3>
+                                <table>
+                                    <tr>
+                                        <th>Campo</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                    </tr>
+                                    <tr>
+                                        <td>KUNNR</td>
+                                        <td>CHAR(10)</td>
+                                        <td>Número do cliente</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NAME1</td>
+                                        <td>CHAR(35)</td>
+                                        <td>Nome/Razão social</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LAND1</td>
+                                        <td>CHAR(3)</td>
+                                        <td>Código do país</td>
+                                    </tr>
+                                    <tr>
+                                        <td>REGIO</td>
+                                        <td>CHAR(3)</td>
+                                        <td>Região/Estado</td>
+                                    </tr>
+                                    <tr>
+                                        <td>VKORG</td>
+                                        <td>CHAR(4)</td>
+                                        <td>Organização de vendas</td>
+                                    </tr>
+                                    <tr>
+                                        <td>BUKRS</td>
+                                        <td>CHAR(4)</td>
+                                        <td>Empresa</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ADRNR</td>
+                                        <td>CHAR(10)</td>
+                                        <td>Número do endereço</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CITY1</td>
+                                        <td>CHAR(40)</td>
+                                        <td>Cidade</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
