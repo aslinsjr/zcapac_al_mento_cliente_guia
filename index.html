@@ -54,7 +54,7 @@
                             <div class="accordion-body">
                                 <div class="info-box">
                                     <strong>Nome:</strong> ZCAPAC_AL_MENTO_CLIENTE<br>
-                                    <strong>Message-ID:</strong> ZCAPAC_JL_01<br>
+                                    <strong>Message-ID:</strong> ZCAPAC_AL_01<br>
                                     <strong>Tipo:</strong> Report Executável<br>
                                     <strong>Objetivo:</strong> Consultar, exibir e gerenciar informações de clientes com filtros avançados e múltiplas opções de visualização.
                                 </div>
@@ -120,9 +120,9 @@
                                 <p>O programa segue o padrão modular ABAP, dividido em <strong>4 arquivos INCLUDE</strong>:</p>
 
                                 <pre><code>ZCAPAC_AL_MENTO_CLIENTE (Principal - 42 linhas)
-├── ZCAPAC_JL_MENTO_TOP    → Declarações, TYPES e DATA (77 linhas)
-├── ZCAPAC_JL_MENTO_EVE    → Eventos da tela de seleção (54 linhas)
-└── ZCAPAC_JL_MENTO_F01    → Sub-rotinas/FORMs (320+ linhas)</code></pre>
+├── ZCAPAC_AL_MENTO_TOP    → Declarações, TYPES e DATA (77 linhas)
+├── ZCAPAC_AL_MENTO_EVE    → Eventos da tela de seleção (54 linhas)
+└── ZCAPAC_AL_MENTO_F01    → Sub-rotinas/FORMs (320+ linhas)</code></pre>
 
                                 <div class="success-box">
                                     <strong>🎯 Vantagens da Modularização:</strong><br>
@@ -181,14 +181,14 @@
                         <div class="accordion-content">
                             <div class="accordion-body">
                                 <h3>🔹 1. Cabeçalho do Report</h3>
-                                <pre><code>REPORT zcapac_jl_mento_cliente MESSAGE-ID ZCAPAC_JL_01.</code></pre>
+                                <pre><code>REPORT zcapac_al_mento_cliente MESSAGE-ID ZCAPAC_AL_01.</code></pre>
                                 <ul>
                                     <li><code>REPORT</code> - Define um programa executável (tipo R)</li>
-                                    <li><code>MESSAGE-ID</code> - Define classe de mensagens ZCAPAC_JL_01 para usar MESSAGE s000, e001, etc.</li>
+                                    <li><code>MESSAGE-ID</code> - Define classe de mensagens ZCAPAC_AL_01 para usar MESSAGE s000, e001, etc.</li>
                                 </ul>
 
                                 <h3>🔹 2. Include TOP (Declarações)</h3>
-                                <pre><code>INCLUDE zcapac_jl_mento_top.</code></pre>
+                                <pre><code>INCLUDE zcapac_al_mento_top.</code></pre>
                                 <p>Inclui todas as declarações: TABLES, TYPES e variáveis globais.</p>
 
                                 <h3>🔹 3. Tela de Seleção - BLOCO 1</h3>
@@ -229,7 +229,7 @@ SELECTION-SCREEN FUNCTION KEY 2.</code></pre>
                                 <p>Cria 2 botões customizados na barra de ferramentas (FC01 e FC02).</p>
 
                                 <h3>🔹 6. Include Eventos</h3>
-                                <pre><code>INCLUDE zcapac_jl_mento_eve.</code></pre>
+                                <pre><code>INCLUDE zcapac_al_mento_eve.</code></pre>
                                 <p>Inclui todos os eventos: INITIALIZATION, AT SELECTION-SCREEN, etc.</p>
 
                                 <h3>🔹 7. Processamento Principal</h3>
@@ -237,7 +237,7 @@ SELECTION-SCREEN FUNCTION KEY 2.</code></pre>
   PERFORM zf_seleciona_dados.
 
 END-OF-SELECTION.
-  INCLUDE zcapac_jl_mento_f01.</code></pre>
+  INCLUDE zcapac_al_mento_f01.</code></pre>
                                 <ul>
                                     <li><code>START-OF-SELECTION</code> - Evento disparado após validação da tela</li>
                                     <li><code>PERFORM zf_seleciona_dados</code> - Chama FORM principal que inicia processamento</li>
@@ -321,7 +321,7 @@ tp_t_tvarvc_full TYPE TABLE OF tp_tvarvc_full</code></pre>
 
                                 <h3>🔹 3. Variáveis Globais</h3>
                                 <pre><code>DATA: tg_alv   TYPE tp_t_saida,
-      tg_alv_2 TYPE TABLE OF zst_capac_jl_01.</code></pre>
+      tg_alv_2 TYPE TABLE OF zst_capac_al_01.</code></pre>
                                 <ul>
                                     <li><code>tg_alv</code> - Tabela interna para ALV manual</li>
                                     <li><code>tg_alv_2</code> - Tabela interna baseada em estrutura DDIC (para ALV function)</li>
@@ -451,7 +451,7 @@ tp_t_tvarvc_full TYPE TABLE OF tp_tvarvc_full</code></pre>
                                 <pre><code>SELECT sign opti low high
   INTO TABLE tl_tvarvc_full
   FROM tvarvc
-  WHERE name = 'ZCAPAC_JL_BUKRS_S' AND type = 'S'.</code></pre>
+  WHERE name = 'ZCAPAC_AL_BUKRS_S' AND type = 'S'.</code></pre>
                                 <p>Busca lista de empresas permitidas configuradas em TVARVC.</p>
 
                                 <h4>2. Busca Clientes (KNA1)</h4>
@@ -646,7 +646,7 @@ APPEND wl_fieldcat TO ct_fieldcat[].</code></pre>
                                 <h4>1. Gera Fieldcatalog Automático</h4>
                                 <pre><code>CALL FUNCTION 'REUSE_ALV_FIELDCATALOG_MERGE'
   EXPORTING
-    i_structure_name = 'ZST_CAPAC_JL_01'
+    i_structure_name = 'ZST_CAPAC_AL_01'
   CHANGING
     ct_fieldcat = ct_fieldcat.</code></pre>
 
@@ -683,7 +683,7 @@ ENDLOOP.</code></pre>
     ENDLOOP.
 
     IF tl_clientes[] IS NOT INITIAL.
-      MODIFY zcapac_jl_prog FROM TABLE tl_clientes[].
+      MODIFY zcapac_al_prog FROM TABLE tl_clientes[].
       IF sy-subrc EQ 0.
         COMMIT WORK.
       ELSE.
@@ -695,7 +695,7 @@ ENDFORM.</code></pre>
 
                                 <div class="success-box">
                                     <strong>💾 Salvamento:</strong> Quando usuário clica em salvar no ALV (&DATA_SAVE), 
-                                    dados editados são gravados na tabela customizada ZCAPAC_JL_PROG com controle de transação.
+                                    dados editados são gravados na tabela customizada ZCAPAC_AL_PROG com controle de transação.
                                 </div>
 
                                 <h3>🔹 FORM zf_exibe_cliente</h3>
@@ -729,7 +729,7 @@ ENDIF.</code></pre>
 
                                 <h3>🔹 FORM zf_valida_regio</h3>
                                 <p><strong>Propósito:</strong> Validar se região existe.</p>
-                                <pre><code>CALL FUNCTION 'ZCAPAC_JL_CHECK_REGIO'
+                                <pre><code>CALL FUNCTION 'ZCAPAC_AL_CHECK_REGIO'
   EXPORTING
     iv_regio = p_regio
   IMPORTING
@@ -823,7 +823,7 @@ ENDIF.</code></pre>
 8. No ALV Function (se usuário editar e salvar)
    FORM usercommand
    └─> Captura &DATA_SAVE
-       └─> MODIFY zcapac_jl_prog
+       └─> MODIFY zcapac_al_prog
            ├─> COMMIT WORK (sucesso)
            └─> ROLLBACK WORK (erro)
                                     </code></pre>
@@ -924,12 +924,12 @@ ENDIF.</code></pre>
                                 <h3>✅ 3. Validação de Região</h3>
                                 <pre><code>AT SELECTION-SCREEN ON p_regio.
   PERFORM zf_valida_regio.
-    └─> CALL FUNCTION 'ZCAPAC_JL_CHECK_REGIO'
+    └─> CALL FUNCTION 'ZCAPAC_AL_CHECK_REGIO'
         └─> MESSAGE se inválida</code></pre>
                                 <p>Valida em tempo real se região existe, evitando erros posteriores.</p>
 
                                 <h3>🔒 4. Filtro por Empresas Autorizadas</h3>
-                                <pre><code>Parâmetro TVARVC: ZCAPAC_JL_BUKRS_S
+                                <pre><code>Parâmetro TVARVC: ZCAPAC_AL_BUKRS_S
 Tipo: Selection (S)
 Valores: Lista de empresas autorizadas
 
@@ -968,7 +968,7 @@ I    | BT   | US01 | US05</code></pre>
                                 <ul>
                                     <li><strong>Campo Editável:</strong> CITY1 (cidade)</li>
                                     <li><strong>Campos Ocultos:</strong> VKORG, BUKRS (dados presentes mas não visíveis)</li>
-                                    <li><strong>Salvamento:</strong> Botão salvar grava em ZCAPAC_JL_PROG</li>
+                                    <li><strong>Salvamento:</strong> Botão salvar grava em ZCAPAC_AL_PROG</li>
                                     <li><strong>Transação:</strong> COMMIT/ROLLBACK conforme sucesso</li>
                                 </ul>
 
@@ -1352,7 +1352,7 @@ APPEND wl_fieldcat TO ct_fieldcat.</code></pre>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><strong>ZCAPAC_JL_PROG</strong></td>
+                                            <td><strong>ZCAPAC_AL_PROG</strong></td>
                                             <td>Tabela Z para armazenar dados editados</td>
                                             <td>Salva KUNNR, NAME1, BUKRS após edição no ALV</td>
                                         </tr>
@@ -1369,7 +1369,7 @@ APPEND wl_fieldcat TO ct_fieldcat.</code></pre>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><strong>ZST_CAPAC_JL_01</strong></td>
+                                            <td><strong>ZST_CAPAC_AL_01</strong></td>
                                             <td>Estrutura para ALV Function (fieldcatalog automático)</td>
                                         </tr>
                                     </tbody>
@@ -1386,7 +1386,7 @@ TVARVC (Configuração)
 
                                 <h3>⚙️ Parâmetro TVARVC</h3>
                                 <div class="info-box">
-                                    <strong>Nome:</strong> ZCAPAC_JL_BUKRS_S<br>
+                                    <strong>Nome:</strong> ZCAPAC_AL_BUKRS_S<br>
                                     <strong>Tipo:</strong> S (Selection)<br>
                                     <strong>Propósito:</strong> Define quais empresas (BUKRS) são permitidas no relatório<br>
                                     <strong>Manutenção:</strong> Transação STVARV ou tabela TVARVC<br>
